@@ -2,47 +2,229 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#10182b">
 <title>لَمّة PLAY</title>
 <style>
+:root{
+ --bg:#10182b;--panel:#202e48;--gold:#ffd45c;
+ --white:#fff;--muted:#aab5c9;--red:#ed5555;
+ --green:#28b875;--yellow:#f4ca42;--blue:#4789ed;
+}
 *{box-sizing:border-box}
-body{margin:0;background:#10182b;color:white;font-family:Arial;text-align:center}
-header{padding:20px;color:#ffd45c;font-size:32px;font-weight:bold}
-.panel{background:#202e48;border-radius:18px;padding:16px;margin:12px auto;max-width:600px}
-button{border:0;border-radius:12px;padding:13px 20px;margin:6px;font-size:17px;font-weight:bold;background:#ffd45c;color:#18233b;cursor:pointer}
-.hidden{display:none}
-#board{display:grid;grid-template-columns:repeat(15,1fr);width:min(94vw,540px);aspect-ratio:1;margin:15px auto;background:white;border:4px solid white}
-.cell{border:1px solid #ccd2dc;background:#f8fafc;display:flex;align-items:center;justify-content:center;position:relative;font-size:clamp(9px,2.5vw,18px)}
-.home.red{background:#ef7777}.home.green{background:#65c98d}.home.yellow{background:#f5dc70}.home.blue{background:#78a1ed}
-.safe{background:#e5e7eb}
-.center{background:conic-gradient(#65c98d 0 25%,#f5dc70 0 50%,#78a1ed 0 75%,#ef7777 0)}
-.token{border:2px solid white;border-radius:50%;width:85%;height:85%;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;cursor:pointer}
-.token.red{background:#c92525}.token.green{background:#087e3d}.token.yellow{background:#b58b00}.token.blue{background:#2156b5}
-#dice{font-size:45px;margin:8px}
+body{margin:0;background:var(--bg);color:white;font-family:Arial,sans-serif}
+button,input{font:inherit}
+button{border:0;border-radius:13px;padding:13px 17px;font-weight:bold;cursor:pointer}
+button:active{transform:scale(.97)}
+.primary{background:var(--gold);color:#17223a}
+.secondary{background:#344563;color:white}
+.danger{background:#9c3540;color:white}
+header{padding:17px 14px;text-align:center;color:var(--gold);font-size:27px;font-weight:bold}
+header small{display:block;font-size:11px;color:#c4cede;margin-top:5px}
+main{max-width:650px;margin:auto;padding:10px 13px 95px}
+.panel{background:var(--panel);border:1px solid #34435d;border-radius:19px;padding:17px;margin-bottom:13px}
+.hidden{display:none!important}
+h2{font-size:20px;margin:5px 0 15px}
+h3{margin:5px 0 12px}
+p{color:var(--muted);line-height:1.7}
+input{width:100%;padding:14px;border-radius:12px;border:1px solid #52627c;background:#111d32;color:white;margin:7px 0;outline:none}
+button.full{width:100%;margin:6px 0}
+.hero{text-align:center;padding:25px 12px}
+.logo{font-size:58px}
+.hero h1{color:var(--gold);font-size:30px;margin:8px}
+.hero p{margin:5px}
+.profile{display:flex;align-items:center;gap:12px}
+.avatar{width:52px;height:52px;border-radius:50%;background:#394d70;display:grid;place-items:center;font-size:26px}
+.profile-info{flex:1;text-align:right}
+.profile-info small{display:block;color:var(--muted);margin-top:5px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.menu-btn{min-height:95px;background:#293b5a;color:white;border:1px solid #465979;font-size:16px}
+.menu-btn span{display:block;font-size:27px;margin-bottom:7px}
+.section-title{color:var(--gold);margin:18px 3px 10px;font-weight:bold}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#17243a;border-top:1px solid #35445e;display:flex;justify-content:space-around;padding:9px 3px;z-index:5}
+.bottom button{background:transparent;color:#c5cee0;padding:8px 4px;font-size:12px}
+.bottom button b{display:block;font-size:21px;margin-bottom:3px}
+.bottom button.active{color:var(--gold)}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.row>*{flex:1}
+.badge{background:#344765;padding:6px 10px;border-radius:20px;font-size:12px;color:#fff}
+#board{display:grid;grid-template-columns:repeat(15,1fr);width:min(94vw,540px);aspect-ratio:1;margin:12px auto;background:white;border:4px solid white;border-radius:5px;overflow:hidden}
+.cell{border:1px solid #d4d9e2;background:#f8fafc;display:flex;align-items:center;justify-content:center;position:relative;min-width:0;min-height:0}
+.cell.path{background:#fff}
+.cell.safe{background:#e5e7eb}
+.cell.home.red{background:#ef7777}
+.cell.home.green{background:#65c98d}
+.cell.home.yellow{background:#f5dc70}
+.cell.home.blue{background:#78a1ed}
+.cell.center{background:conic-gradient(#65c98d 0 25%,#f5dc70 0 50%,#78a1ed 0 75%,#ef7777 0)}
+.token{width:88%;height:88%;border-radius:50%;border:2px solid white;box-shadow:0 1px 4px #333;display:grid;place-items:center;color:white;font-weight:bold;font-size:clamp(8px,2vw,14px);cursor:pointer;z-index:2}
+.token.red{background:#c92525}.token.green{background:#087e3d}
+.token.yellow{background:#b58b00}.token.blue{background:#2156b5}
+.token.selected{outline:3px solid #222;transform:scale(1.08)}
+#dice{font-size:48px;text-align:center;margin:7px}
+#status{text-align:center;color:var(--gold);font-weight:bold}
+.player-list{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}
+.player-tag{padding:8px 12px;background:#344563;border-radius:12px;font-size:13px}
+.list-item{display:flex;align-items:center;gap:10px;padding:12px 3px;border-bottom:1px solid #3a4a64}
+.list-item:last-child{border:0}
+.list-item .grow{flex:1}
+.list-item small{display:block;color:var(--muted);margin-top:4px}
+.chat-log{height:260px;overflow:auto;background:#121e33;padding:12px;border-radius:13px;margin:10px 0}
+.bubble{background:#344563;padding:9px 12px;border-radius:13px;margin:8px 0;max-width:85%;width:fit-content}
+.bubble.mine{background:#67552b;margin-right:auto}
+.note{font-size:12px;color:#aab5c9;line-height:1.7}
 </style>
 </head>
 <body>
-<header>🎲 لَمّة PLAY</header>
-<section id="menu" class="panel">
-<h2>اللعبة تجمعنا ❤️</h2>
-<input id="playerName" placeholder="اسم اللاعب">
-<br>
-<button onclick="start(2)">لاعبين</button>
-<button onclick="start(4)">أربعة لاعبين</button>
+<header>🎲 لَمّة PLAY<small>اللعبة تجمعنا ❤️</small></header>
+
+<main>
+<!-- تسجيل الحساب -->
+<section id="login" class="panel hidden">
+<div class="hero"><div class="logo">🎲</div><h1>أهلاً بك في لَمّة PLAY</h1><p>أنشئ حسابك وابدأ اللعب</p></div>
+<input id="loginName" maxlength="18" placeholder="اكتب اسم اللاعب">
+<button class="primary full" onclick="createAccount()">إنشاء الحساب والدخول</button>
 </section>
-<section id="game" class="hidden">
+
+<!-- الرئيسية -->
+<section id="homePage">
+<div class="panel profile">
+<div class="avatar">👤</div>
+<div class="profile-info"><strong id="homeName">لاعب</strong><small id="homeID">ID: ---</small></div>
+<span class="badge">مجاني</span>
+</div>
+<div class="panel hero">
+<div class="logo">🎲</div>
+<h1>اللعبة تجمعنا</h1>
+<p>اجمع أصدقاءك وابدأ المتعة!</p>
+<button class="primary full" onclick="showPage('playPage')">ابدأ اللعب الآن</button>
+</div>
+<div class="section-title">الألعاب والأنشطة</div>
+<div class="grid">
+<button class="menu-btn" onclick="showPage('playPage')"><span>🎲</span>لعبة لودو</button>
+<button class="menu-btn" onclick="showPage('friendsPage')"><span>👥</span>الأصدقاء</button>
+<button class="menu-btn" onclick="showPage('roomsPage')"><span>🏠</span>غرف اللعب</button>
+<button class="menu-btn" onclick="showPage('chatPage')"><span>💬</span>المحادثات</button>
+<button class="menu-btn" onclick="showPage('giftsPage')"><span>🎁</span>الهدايا</button>
+<button class="menu-btn" onclick="showPage('profilePage')"><span>👤</span>حسابي</button>
+</div>
+</section>
+
+<!-- اللعب -->
+<section id="playPage" class="hidden">
 <div class="panel">
-<div id="status"></div>
+<h2>🎲 اختر طريقة اللعب</h2>
+<button class="primary full" onclick="startGame(2)">لعب لاعبين</button>
+<button class="primary full" onclick="startGame(4)">لعب أربعة لاعبين</button>
+<button class="secondary full" onclick="showPage('homePage')">رجوع للرئيسية</button>
+</div>
+</section>
+
+<section id="gamePage" class="hidden">
+<div class="panel">
+<div id="status">دور اللاعب الأحمر</div>
+<div class="player-list" id="playerTags"></div>
 <div id="dice">🎲</div>
-<button onclick="roll()">ارمِ النرد</button>
-<button onclick="back()">رجوع</button>
+<div class="row">
+<button class="primary" onclick="rollDice()">ارمِ النرد</button>
+<button class="secondary" onclick="newGame()">إعادة اللعبة</button>
+<button class="secondary" onclick="showPage('homePage')">خروج</button>
+</div>
+<p id="gameMessage" class="note">ارمِ النرد للبدء. اضغط على القطعة لتحريكها.</p>
 </div>
 <div id="board"></div>
-<div class="panel" id="message">ارمِ النرد للبدء</div>
+<div class="panel">
+<strong>قطعك المتاحة</strong>
+<div id="piecesInfo" class="note">ارمِ النرد أولاً</div>
+</div>
 </section>
+
+<!-- الأصدقاء -->
+<section id="friendsPage" class="hidden">
+<div class="panel">
+<h2>👥 الأصدقاء</h2>
+<input id="friendID" placeholder="أدخل معرّف اللاعب ID">
+<button class="primary full" onclick="addFriend()">إضافة صديق</button>
+<div id="friendsList"></div>
+</div>
+<button class="secondary full" onclick="showPage('homePage')">رجوع</button>
+</section>
+
+<!-- الغرف -->
+<section id="roomsPage" class="hidden">
+<div class="panel">
+<h2>🏠 غرف اللعب</h2>
+<input id="roomName" maxlength="25" placeholder="اسم الغرفة">
+<div class="row">
+<button class="primary" onclick="createRoom()">إنشاء غرفة</button>
+<button class="secondary" onclick="renderRooms()">تحديث القائمة</button>
+</div>
+<div id="roomsList"></div>
+<p class="note">الغرف المعروضة حالياً محفوظة على هذا الجهاز فقط. مشاركة الغرف بين الأجهزة تتطلب خادماً.</p>
+</div>
+<button class="secondary full" onclick="showPage('homePage')">رجوع</button>
+</section>
+
+<!-- المحادثات -->
+<section id="chatPage" class="hidden">
+<div class="panel">
+<h2>💬 المحادثات</h2>
+<div class="chat-log" id="chatLog">
+<div class="bubble">أهلاً بك في لَمّة PLAY ❤️</div>
+</div>
+<div class="row">
+<input id="chatInput" placeholder="اكتب رسالة..." maxlength="300">
+<button class="primary" onclick="sendMessage()">إرسال</button>
+</div>
+<p class="note">هذه محادثة تجريبية محلية. المحادثات المباشرة والصوتية بين اللاعبين تحتاج خادم واتصالاً حقيقياً.</p>
+</div>
+<button class="secondary full" onclick="showPage('homePage')">رجوع</button>
+</section>
+
+<!-- الهدايا -->
+<section id="giftsPage" class="hidden">
+<div class="panel">
+<h2>🎁 الهدايا</h2>
+<div class="grid">
+<button class="menu-btn" onclick="gift('وردة 🌹')"><span>🌹</span>وردة</button>
+<button class="menu-btn" onclick="gift('قلب ❤️')"><span>❤️</span>قلب</button>
+<button class="menu-btn" onclick="gift('نجمة ⭐')"><span>⭐</span>نجمة</button>
+<button class="menu-btn" onclick="gift('تاج 👑')"><span>👑</span>تاج</button>
+</div>
+<p class="note">الهدايا هنا تجريبية ومجانية، ولا توجد عملات أو مشتريات في الإصدار الأول.</p>
+</div>
+<button class="secondary full" onclick="showPage('homePage')">رجوع</button>
+</section>
+
+<!-- الحساب -->
+<section id="profilePage" class="hidden">
+<div class="panel">
+<h2>👤 حسابي</h2>
+<div class="profile"><div class="avatar">👤</div><div class="profile-info"><strong id="profileName"></strong><small id="profileID"></small></div></div>
+<input id="newName" maxlength="18" placeholder="تغيير الاسم">
+<button class="primary full" onclick="changeName()">حفظ الاسم</button>
+<button class="secondary full" onclick="copyID()">نسخ معرّف ID</button>
+<button class="danger full" onclick="logout()">تسجيل الخروج من هذا الجهاز</button>
+</div>
+<button class="secondary full" onclick="showPage('homePage')">رجوع</button>
+</section>
+</main>
+
+<nav class="bottom">
+<button class="active" onclick="showPage('homePage',this)"><b>⌂</b>الرئيسية</button>
+<button onclick="showPage('playPage',this)"><b>🎲</b>اللعب</button>
+<button onclick="showPage('friendsPage',this)"><b>👥</b>الأصدقاء</button>
+<button onclick="showPage('chatPage',this)"><b>💬</b>الدردشة</button>
+<button onclick="showPage('profilePage',this)"><b>👤</b>حسابي</button>
+</nav>
+
 <script>
+const $=id=>document.getElementById(id);
 const names=["الأحمر","الأخضر","الأصفر","الأزرق"];
 const colors=["red","green","yellow","blue"];
+const symbols=["🔴","🟢","🟡","🔵"];
+const starts=[0,13,26,39];
+const safe=[0,8,13,21,26,34,39,47];
 const route=[
 [6,1],[6,2],[6,3],[6,4],[6,5],[5,6],
 [4,6],[3,6],[2,6],[1,6],[0,6],[0,7],
@@ -54,96 +236,191 @@ const route=[
 [10,6],[9,6],[8,5],[8,4],[8,3],[8,2],
 [8,1],[8,0],[7,0],[6,0]
 ];
-const starts=[0,13,26,39];
-const safe=[0,8,13,21,26,34,39,47];
-let count=2,turn=0,positions=[],rollValue=0,waiting=false;
-function start(n){
- count=n;turn=0;rollValue=0;waiting=false;
- positions=Array.from({length:n},()=>[-1,-1,-1,-1]);
- document.getElementById("menu").classList.add("hidden");
- document.getElementById("game").classList.remove("hidden");
+let account=null, friends=[],rooms=[],chat=[];
+let count=2,turn=0,positions=[],rollValue=0,waiting=false,finished=false;
+
+function load(){
+ try{
+ account=JSON.parse(localStorage.getItem("lammaAccount"));
+ friends=JSON.parse(localStorage.getItem("lammaFriends")||"[]");
+ rooms=JSON.parse(localStorage.getItem("lammaRooms")||"[]");
+ }catch(e){account=null;friends=[];rooms=[]}
+ if(account){updateProfile();showPage("homePage")}
+ else{$("login").classList.remove("hidden");$("homePage").classList.add("hidden")}
+}
+function save(){
+ localStorage.setItem("lammaAccount",JSON.stringify(account));
+ localStorage.setItem("lammaFriends",JSON.stringify(friends));
+ localStorage.setItem("lammaRooms",JSON.stringify(rooms));
+}
+function createAccount(){
+ let name=$("loginName").value.trim();
+ if(!name)return alert("اكتب اسمك أولاً");
+ account={name,id:"LM"+Math.floor(100000+Math.random()*900000)};
+ save();updateProfile();showPage("homePage");
+}
+function updateProfile(){
+ $("homeName").textContent=account.name;
+ $("homeID").textContent="ID: "+account.id;
+ $("profileName").textContent=account.name;
+ $("profileID").textContent="معرّفك: "+account.id;
+}
+function showPage(id,btn){
+ document.querySelectorAll("main>section").forEach(x=>x.classList.add("hidden"));
+ $(id).classList.remove("hidden");
+ document.querySelectorAll(".bottom button").forEach(x=>x.classList.remove("active"));
+ if(btn)btn.classList.add("active");
+ if(id==="friendsPage")renderFriends();
+ if(id==="roomsPage")renderRooms();
+ if(id==="profilePage")updateProfile();
+}
+function changeName(){
+ let n=$("newName").value.trim();
+ if(!n)return alert("اكتب الاسم الجديد");
+ account.name=n;save();updateProfile();alert("تم حفظ الاسم");
+}
+function copyID(){
+ if(navigator.clipboard)navigator.clipboard.writeText(account.id).then(()=>alert("تم نسخ ID"));
+ else alert("معرّفك: "+account.id);
+}
+function logout(){
+ if(!confirm("تريد تسجيل الخروج؟"))return;
+ account=null;localStorage.removeItem("lammaAccount");location.reload();
+}
+function addFriend(){
+ let id=$("friendID").value.trim().toUpperCase();
+ if(!id)return alert("أدخل معرّف اللاعب");
+ if(id===account.id)return alert("هذا معرّف حسابك");
+ if(friends.includes(id))return alert("هذا اللاعب موجود بالقائمة");
+ friends.push(id);save();$("friendID").value="";renderFriends();
+}
+function renderFriends(){
+ $("friendsList").innerHTML=friends.length?"":"<p>ما عندك أصدقاء مضافين بعد.</p>";
+ friends.forEach(id=>{
+ let d=document.createElement("div");d.className="list-item";
+ let s=document.createElement("span");s.className="grow";s.textContent=id;
+ let b=document.createElement("button");b.className="danger";b.textContent="حذف";
+ b.onclick=()=>{friends=friends.filter(x=>x!==id);save();renderFriends()};
+ d.append(s,b);$("friendsList").append(d);
+ });
+}
+function createRoom(){
+ let name=$("roomName").value.trim()||"غرفة لَمّة";
+ let room={id:"R"+Math.floor(1000+Math.random()*9000),name,owner:account.name};
+ rooms.push(room);save();$("roomName").value="";renderRooms();
+}
+function renderRooms(){
+ $("roomsList").innerHTML=rooms.length?"":"<p>لا توجد غرف حالياً. أنشئ غرفتك الأولى!</p>";
+ rooms.forEach(r=>{
+ let d=document.createElement("div");d.className="list-item";
+ let s=document.createElement("span");s.className="grow";
+ s.textContent=r.name+" · "+r.id;
+ let b=document.createElement("button");b.className="primary";b.textContent="دخول";
+ b.onclick=()=>alert("هذه غرفة محلية تجريبية. اللعب الجماعي عبر الإنترنت يحتاج خادماً.");
+ d.append(s,b);$("roomsList").append(d);
+ });
+}
+function sendMessage(){
+ let value=$("chatInput").value.trim();if(!value)return;
+ let b=document.createElement("div");b.className="bubble mine";b.textContent=account.name+": "+value;
+ $("chatLog").append(b);$("chatInput").value="";
+ $("chatLog").scrollTop=$("chatLog").scrollHeight;
+}
+$("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter")sendMessage()});
+function gift(name){alert("🎁 اخترت "+name+" — هدية تجريبية مجانية!")}
+function startGame(n){count=n;newGame();showPage("gamePage")}
+function newGame(){
+ turn=0;rollValue=0;waiting=false;finished=false;
+ positions=Array.from({length:count},()=>[-1,-1,-1,-1]);
+ $("dice").textContent="🎲";$("gameMessage").textContent="ارمِ النرد للبدء";
  draw();
 }
 function draw(){
- const board=document.getElementById("board");
- board.innerHTML="";
+ let board=$("board");board.innerHTML="";
  for(let r=0;r<15;r++)for(let c=0;c<15;c++){
-  let el=document.createElement("div");el.className="cell";
-  if(r<6&&c<6)el.classList.add("home","red");
-  else if(r<6&&c>8)el.classList.add("home","green");
-  else if(r>8&&c>8)el.classList.add("home","yellow");
-  else if(r>8&&c<6)el.classList.add("home","blue");
-  let ri=route.findIndex(p=>p[0]===r&&p[1]===c);
-  if(ri>=0){el.className="cell";if(safe.includes(ri))el.classList.add("safe");}
-  if(r>=6&&r<=8&&c>=6&&c<=8)el.className="cell center";
-  el.dataset.r=r;el.dataset.c=c;
-  board.appendChild(el);
+ let el=document.createElement("div");el.className="cell";
+ if(r<6&&c<6)el.classList.add("home","red");
+ else if(r<6&&c>8)el.classList.add("home","green");
+ else if(r>8&&c>8)el.classList.add("home","yellow");
+ else if(r>8&&c<6)el.classList.add("home","blue");
+ let ri=route.findIndex(p=>p[0]===r&&p[1]===c);
+ if(ri>=0){el.className="cell path";if(safe.includes(ri))el.classList.add("safe")}
+ if(r>=6&&r<=8&&c>=6&&c<=8)el.className="cell center";
+ el.dataset.r=r;el.dataset.c=c;board.append(el);
  }
- positions.forEach((pieces,p)=>{
-  pieces.forEach((pos,i)=>{
-   if(pos<0)return;
-   let point=route[(starts[p]+pos)%route.length];
-   let cell=board.querySelector(`[data-r="${point[0]}"][data-c="${point[1]}"]`);
-   if(!cell)return;
-   let t=document.createElement("div");
-   t.className="token "+colors[p];t.textContent=i+1;
-   t.onclick=()=>move(i);
-   cell.appendChild(t);
-  });
- });
- document.getElementById("status").textContent="دور اللاعب "+names[turn];
+ // مناطق انتظار القطع
+ const homes=[
+ [[1,1],[1,4],[4,1],[4,4]],
+ [[1,10],[1,13],[4,10],[4,13]],
+ [[10,10],[10,13],[13,10],[13,13]],
+ [[10,1],[10,4],[13,1],[13,4]]
+ ];
+ positions.forEach((group,p)=>group.forEach((pos,i)=>{
+ let point;
+ if(pos===-1)point=homes[p][i];
+ else if(pos>=52){
+ const endPaths=[
+ [[7,1],[7,2],[7,3],[7,4],[7,5],[7,6]],
+ [[1,7],[2,7],[3,7],[4,7],[5,7],[6,7]],
+ [[7,13],[7,12],[7,11],[7,10],[7,9],[7,8]],
+ [[13,7],[12,7],[11,7],[10,7],[9,7],[8,7]]
+ ];
+ point=endPaths[p][Math.min(pos-52,5)];
+ }else point=route[(starts[p]+pos)%52];
+ let cell=board.querySelector(`[data-r="${point[0]}"][data-c="${point[1]}"]`);
+ if(!cell)return;
+ let token=document.createElement("div");token.className="token "+colors[p];
+ token.textContent=i+1;token.onclick=()=>movePiece(i);cell.append(token);
+ }));
+ $("status").textContent="دور اللاعب "+names[turn];
+ $("playerTags").innerHTML=Array.from({length:count},(_,i)=>`<span class="player-tag">${symbols[i]} ${names[i]}</span>`).join("");
+ $("piecesInfo").textContent=positions[turn].map((v,i)=>"قطعة "+(i+1)+": "+(v===-1?"في البيت":v===57?"وصلت للنهاية":"على المسار "+v)).join(" | ");
 }
-function roll(){
- if(waiting)return;
+function rollDice(){
+ if(waiting||finished)return;
  rollValue=Math.floor(Math.random()*6)+1;
- document.getElementById("dice").textContent=["⚀","⚁","⚂","⚃","⚄","⚅"][rollValue-1];
+ $("dice").textContent=["⚀","⚁","⚂","⚃","⚄","⚅"][rollValue-1];
  waiting=true;
- document.getElementById("message").textContent="اختر قطعة من قطع اللاعب "+names[turn];
+ let valid=positions[turn].some(v=>
+ (v===-1&&rollValue===6)||(v>=0&&v<57&&v+rollValue<=57)
+ );
+ if(!valid){
+ $("gameMessage").textContent="لا توجد حركة ممكنة. ينتقل الدور.";
+ waiting=false;if(rollValue!==6)turn=(turn+1)%count;
+ draw();return;
+ }
+ $("gameMessage").textContent="اختر القطعة التي تريد تحريكها";
 }
-function move(i){
- if(!waiting)return;
+function movePiece(i){
+ if(!waiting||finished)return;
  let old=positions[turn][i];
- if(old===-1&&rollValue!==6){
-  document.getElementById("message").textContent="تحتاج رقم 6 لإخراج القطعة";
-  return;
- }
+ if(old===-1&&rollValue!==6)return alert("تحتاج إلى رقم 6 لإخراج القطعة");
  let next=old===-1?0:old+rollValue;
- if(next>57){
-  document.getElementById("message").textContent="تحتاج رقماً مضبوطاً للنهاية";
-  return;
- }
+ if(next>57)return alert("تحتاج رقماً مضبوطاً للوصول إلى النهاية");
  positions[turn][i]=next;
+ // أكل قطع الخصم عند الوقوف على خانة غير آمنة
  if(next<52){
-  let landing=(starts[turn]+next)%52;
-  if(!safe.includes(landing)){
-   positions.forEach((group,p)=>{
-    if(p===turn)return;
-    group.forEach((v,j)=>{
-     if(v>=0&&v<52&&(starts[p]+v)%52===landing){
-      group[j]=-1;
-     }
-    });
-   });
-  }
+ let landing=(starts[turn]+next)%52;
+ if(!safe.includes(landing)){
+ positions.forEach((group,p)=>{
+ if(p===turn)return;
+ group.forEach((v,j)=>{
+ if(v>=0&&v<52&&(starts[p]+v)%52===landing)group[j]=-1;
+ });
+ });
+ }
  }
  if(positions[turn].every(v=>v===57)){
-  document.getElementById("message").textContent="🏆 فاز اللاعب "+names[turn];
-  waiting=false;draw();return;
+ finished=true;waiting=false;draw();
+ $("gameMessage").textContent="🏆 فاز اللاعب "+names[turn]+"!";
+ return;
  }
  waiting=false;
  if(rollValue!==6)turn=(turn+1)%count;
- document.getElementById("message").textContent=rollValue===6?"عندك رمية إضافية!":"تم تحريك القطعة";
+ $("gameMessage").textContent=rollValue===6?"ممتاز! عندك رمية إضافية 🎉":"تم تحريك القطعة";
  draw();
 }
-document.getElementById("board").addEventListener("click",e=>{
- if(!waiting)return;
- const token=e.target.closest(".token");
- if(token)return;
-});
-function back(){
- document.getElementById("game").classList.add("hidden");
- document.getElementById("menu").classList.remove("hidden");
-}
+load();
 </script>
 </body>
 </html>

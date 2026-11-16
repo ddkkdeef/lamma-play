@@ -72,6 +72,7 @@ button.full{width:100%;margin:6px 0}
 </style>
 </head>
 <body>
+
 <header>🎲 لَمّة PLAY<small>اللعبة تجمعنا ❤️</small></header>
 <main>
 
@@ -194,6 +195,7 @@ button.full{width:100%;margin:6px 0}
 </div>
 <button class="secondary full" onclick="showPage('homePage')">رجوع</button>
 </section>
+
 </main>
 
 <nav class="bottom">
@@ -211,6 +213,7 @@ const colors=["red","green","yellow","blue"];
 const symbols=["🔴","🟢","🟡","🔵"];
 const starts=[0,13,26,39];
 const safe=[0,8,13,21,26,34,39,47];
+
 const route=[
 [6,1],[6,2],[6,3],[6,4],[6,5],[5,6],
 [4,6],[3,6],[2,6],[1,6],[0,6],[0,7],
@@ -222,12 +225,14 @@ const route=[
 [10,6],[9,6],[8,5],[8,4],[8,3],[8,2],
 [8,1],[8,0],[7,0],[6,0]
 ];
+
 const homes=[
 [[1,1],[1,4],[4,1],[4,4]],
 [[1,10],[1,13],[4,10],[4,13]],
 [[10,10],[10,13],[13,10],[13,13]],
 [[10,1],[10,4],[13,1],[13,4]]
 ];
+
 const endPaths=[
 [[7,1],[7,2],[7,3],[7,4],[7,5],[7,6]],
 [[1,7],[2,7],[3,7],[4,7],[5,7],[6,7]],
@@ -241,198 +246,400 @@ let soundOn=true;
 
 function load(){
  try{
- account=JSON.parse(localStorage.getItem("lammaAccount"));
- friends=JSON.parse(localStorage.getItem("lammaFriends")||"[]");
- rooms=JSON.parse(localStorage.getItem("lammaRooms")||"[]");
- }catch(e){account=null;friends=[];rooms=[]}
- if(account){updateProfile();showPage("homePage")}
- else{$("login").classList.remove("hidden");$("homePage").classList.add("hidden")}
+  account=JSON.parse(localStorage.getItem("lammaAccount"));
+  friends=JSON.parse(localStorage.getItem("lammaFriends")||"[]");
+  rooms=JSON.parse(localStorage.getItem("lammaRooms")||"[]");
+ }catch(e){
+  account=null;friends=[];rooms=[];
+ }
+
+ if(account){
+  updateProfile();
+  showPage("homePage");
+ }else{
+  $("login").classList.remove("hidden");
+  $("homePage").classList.add("hidden");
+ }
 }
+
 function save(){
- localStorage.setItem("lammaAccount",JSON.stringify(account));
- localStorage.setItem("lammaFriends",JSON.stringify(friends));
- localStorage.setItem("lammaRooms",JSON.stringify(rooms));
+ try{
+  localStorage.setItem("lammaAccount",JSON.stringify(account));
+  localStorage.setItem("lammaFriends",JSON.stringify(friends));
+  localStorage.setItem("lammaRooms",JSON.stringify(rooms));
+ }catch(e){
+  alert("تعذر حفظ البيانات على هذا المتصفح");
+ }
 }
+
 function createAccount(){
  let name=$("loginName").value.trim();
  if(!name)return alert("اكتب اسمك أولاً");
- account={name,id:"LM"+Math.floor(100000+Math.random()*900000)};
- save();updateProfile();showPage("homePage");
+
+ account={
+  name:name,
+  id:"LM"+Math.floor(100000+Math.random()*900000)
+ };
+
+ save();
+ updateProfile();
+ showPage("homePage");
 }
+
 function updateProfile(){
+ if(!account)return;
  $("homeName").textContent=account.name;
  $("homeID").textContent="ID: "+account.id;
  $("profileName").textContent=account.name;
  $("profileID").textContent="معرّفك: "+account.id;
 }
+
 function showPage(id,btn){
  document.querySelectorAll("main>section").forEach(x=>x.classList.add("hidden"));
  $(id).classList.remove("hidden");
+
  document.querySelectorAll(".bottom button").forEach(x=>x.classList.remove("active"));
  if(btn)btn.classList.add("active");
+
  if(id==="friendsPage")renderFriends();
  if(id==="roomsPage")renderRooms();
  if(id==="profilePage")updateProfile();
 }
+
 function changeName(){
  let n=$("newName").value.trim();
  if(!n)return alert("اكتب الاسم الجديد");
- account.name=n;save();updateProfile();alert("تم حفظ الاسم");
+ account.name=n;
+ save();
+ updateProfile();
+ alert("تم حفظ الاسم");
 }
+
 function copyID(){
- if(navigator.clipboard)navigator.clipboard.writeText(account.id).then(()=>alert("تم نسخ ID")).catch(()=>alert("معرّفك: "+account.id));
- else alert("معرّفك: "+account.id);
+ if(!account)return;
+ if(navigator.clipboard){
+  navigator.clipboard.writeText(account.id)
+   .then(()=>alert("تم نسخ ID"))
+   .catch(()=>alert("معرّفك: "+account.id));
+ }else{
+  alert("معرّفك: "+account.id);
+ }
 }
+
 function logout(){
  if(!confirm("تريد تسجيل الخروج؟"))return;
- account=null;localStorage.removeItem("lammaAccount");location.reload();
+ account=null;
+ localStorage.removeItem("lammaAccount");
+ location.reload();
 }
+
 function addFriend(){
  let id=$("friendID").value.trim().toUpperCase();
  if(!id)return alert("أدخل معرّف اللاعب");
  if(id===account.id)return alert("هذا معرّف حسابك");
  if(friends.includes(id))return alert("هذا اللاعب موجود بالقائمة");
- friends.push(id);save();$("friendID").value="";renderFriends();
+
+ friends.push(id);
+ save();
+ $("friendID").value="";
+ renderFriends();
 }
+
 function renderFriends(){
  $("friendsList").innerHTML="";
- if(!friends.length)$("friendsList").innerHTML="<p>ما عندك أصدقاء مضافين بعد.</p>";
+
+ if(!friends.length){
+  $("friendsList").innerHTML="<p>ما عندك أصدقاء مضافين بعد.</p>";
+ }
+
  friends.forEach(id=>{
- let d=document.createElement("div");d.className="list-item";
- let s=document.createElement("span");s.className="grow";s.textContent=id;
- let b=document.createElement("button");b.className="danger";b.textContent="حذف";
- b.onclick=()=>{friends=friends.filter(x=>x!==id);save();renderFriends()};
- d.append(s,b);$("friendsList").append(d);
+  let d=document.createElement("div");
+  d.className="list-item";
+
+  let s=document.createElement("span");
+  s.className="grow";
+  s.textContent=id;
+
+  let b=document.createElement("button");
+  b.className="danger";
+  b.textContent="حذف";
+
+  b.onclick=()=>{
+   friends=friends.filter(x=>x!==id);
+   save();
+   renderFriends();
+  };
+
+  d.append(s,b);
+  $("friendsList").append(d);
  });
 }
+
 function createRoom(){
  let name=$("roomName").value.trim()||"غرفة لَمّة";
- let room={id:"R"+Math.floor(1000+Math.random()*9000),name,owner:account.name};
- rooms.push(room);save();$("roomName").value="";renderRooms();
+ let room={
+  id:"R"+Math.floor(1000+Math.random()*9000),
+  name:name,
+  owner:account.name
+ };
+
+ rooms.push(room);
+ save();
+ $("roomName").value="";
+ renderRooms();
 }
+
 function renderRooms(){
  $("roomsList").innerHTML="";
- if(!rooms.length)$("roomsList").innerHTML="<p>لا توجد غرف حالياً. أنشئ غرفتك الأولى!</p>";
+
+ if(!rooms.length){
+  $("roomsList").innerHTML="<p>لا توجد غرف حالياً. أنشئ غرفتك الأولى!</p>";
+ }
+
  rooms.forEach(r=>{
- let d=document.createElement("div");d.className="list-item";
- let s=document.createElement("span");s.className="grow";s.textContent=r.name+" · "+r.id;
- let b=document.createElement("button");b.className="primary";b.textContent="دخول";
- b.onclick=()=>alert("هذه غرفة محلية تجريبية. اللعب الجماعي عبر الإنترنت يحتاج خادماً.");
- d.append(s,b);$("roomsList").append(d);
+  let d=document.createElement("div");
+  d.className="list-item";
+
+  let s=document.createElement("span");
+  s.className="grow";
+  s.textContent=r.name+" · "+r.id;
+
+  let b=document.createElement("button");
+  b.className="primary";
+  b.textContent="دخول";
+
+  b.onclick=()=>{
+   alert("هذه غرفة محلية تجريبية. اللعب الجماعي عبر الإنترنت يحتاج خادماً.");
+  };
+
+  d.append(s,b);
+  $("roomsList").append(d);
  });
 }
+
 function sendMessage(){
- let value=$("chatInput").value.trim();if(!value)return;
- let b=document.createElement("div");b.className="bubble mine";b.textContent=account.name+": "+value;
- $("chatLog").append(b);$("chatInput").value="";$("chatLog").scrollTop=$("chatLog").scrollHeight;
+ let value=$("chatInput").value.trim();
+ if(!value)return;
+
+ let b=document.createElement("div");
+ b.className="bubble mine";
+ b.textContent=account.name+": "+value;
+
+ $("chatLog").append(b);
+ $("chatInput").value="";
+ $("chatLog").scrollTop=$("chatLog").scrollHeight;
 }
-$("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter")sendMessage()});
-function gift(name){alert("🎁 اخترت "+name+" — هدية تجريبية مجانية!")}
+
+$("chatInput").addEventListener("keydown",e=>{
+ if(e.key==="Enter")sendMessage();
+});
+
+function gift(name){
+ alert("🎁 اخترت "+name+" — هدية تجريبية مجانية!");
+}
+
 function playSound(freq=500,duration=.12){
  if(!soundOn)return;
+
  try{
- let ctx=new (window.AudioContext||window.webkitAudioContext)();
- let osc=ctx.createOscillator(),gain=ctx.createGain();
- osc.frequency.value=freq;osc.type="sine";
- gain.gain.setValueAtTime(.08,ctx.currentTime);
- gain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+duration);
- osc.connect(gain);gain.connect(ctx.destination);
- osc.start();osc.stop(ctx.currentTime+duration);
- osc.onended=()=>ctx.close();
+  let ctx=new (window.AudioContext||window.webkitAudioContext)();
+  let osc=ctx.createOscillator();
+  let gain=ctx.createGain();
+
+  osc.frequency.value=freq;
+  osc.type="sine";
+
+  gain.gain.setValueAtTime(.08,ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+duration);
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+
+  osc.start();
+  osc.stop(ctx.currentTime+duration);
+  osc.onended=()=>ctx.close();
  }catch(e){}
 }
-function startGame(n){count=n;newGame();showPage("gamePage")}
+
+function startGame(n){
+ count=n;
+ newGame();
+ showPage("gamePage");
+}
+
 function newGame(){
- turn=0;rollValue=0;waiting=false;finished=false;
+ turn=0;
+ rollValue=0;
+ waiting=false;
+ finished=false;
+
  positions=Array.from({length:count},()=>[-1,-1,-1,-1]);
+
  $("dice").textContent="🎲";
  $("gameMessage").textContent="ارمِ النرد للبدء";
+
  draw();
 }
+
 function getPoint(p,pos){
  if(pos===-1)return homes[p][0];
  if(pos>=52)return endPaths[p][Math.min(pos-52,5)];
  return route[(starts[p]+pos)%52];
 }
+
 function draw(){
- let board=$("board");board.innerHTML="";
- for(let r=0;r<15;r++)for(let c=0;c<15;c++){
- let el=document.createElement("div");el.className="cell";
- if(r<6&&c<6)el.classList.add("home","red");
- else if(r<6&&c>8)el.classList.add("home","green");
- else if(r>8&&c>8)el.classList.add("home","yellow");
- else if(r>8&&c<6)el.classList.add("home","blue");
- let ri=route.findIndex(p=>p[0]===r&&p[1]===c);
- if(ri>=0){el.className="cell path";if(safe.includes(ri))el.classList.add("safe")}
- if(r>=6&&r<=8&&c>=6&&c<=8)el.className="cell center";
- el.dataset.r=r;el.dataset.c=c;board.append(el);
+ let board=$("board");
+ board.innerHTML="";
+
+ for(let r=0;r<15;r++){
+  for(let c=0;c<15;c++){
+   let el=document.createElement("div");
+   el.className="cell";
+
+   if(r<6&&c<6)el.classList.add("home","red");
+   else if(r<6&&c>8)el.classList.add("home","green");
+   else if(r>8&&c>8)el.classList.add("home","yellow");
+   else if(r>8&&c<6)el.classList.add("home","blue");
+
+   let ri=route.findIndex(p=>p[0]===r&&p[1]===c);
+
+   if(ri>=0){
+    el.className="cell path";
+    if(safe.includes(ri))el.classList.add("safe");
+   }
+
+   if(r>=6&&r<=8&&c>=6&&c<=8){
+    el.className="cell center";
+   }
+
+   el.dataset.r=r;
+   el.dataset.c=c;
+   board.append(el);
+  }
  }
- positions.forEach((group,p)=>group.forEach((pos,i)=>{
- let point=getPoint(p,pos);
- let cell=board.querySelector(`[data-r="${point[0]}"][data-c="${point[1]}"]`);
- if(!cell)return;
- let token=document.createElement("button");
- token.className="token "+colors[p];
- token.textContent=i+1;
- token.setAttribute("aria-label","قطعة "+(i+1));
- if(p===turn&&waiting&&canMove(i))token.classList.add("selected");
- token.onclick=()=>movePiece(i);
- cell.append(token);
- }));
+
+ positions.forEach((group,p)=>{
+  group.forEach((pos,i)=>{
+   let point=getPoint(p,pos);
+
+   let cell=board.querySelector(
+    `[data-r="${point[0]}"][data-c="${point[1]}"]`
+   );
+
+   if(!cell)return;
+
+   let token=document.createElement("button");
+   token.className="token "+colors[p];
+   token.textContent=i+1;
+   token.setAttribute("aria-label","قطعة "+(i+1));
+
+   if(p===turn&&waiting&&canMove(i)){
+    token.classList.add("selected");
+   }
+
+   token.onclick=()=>movePiece(i);
+   cell.append(token);
+  });
+ });
+
  $("status").textContent="دور اللاعب "+names[turn];
- $("playerTags").innerHTML=Array.from({length:count},(_,i)=>`<span class="player-tag">${symbols[i]} ${names[i]}</span>`).join("");
- $("piecesInfo").textContent=positions[turn].map((v,i)=>"قطعة "+(i+1)+": "+(v===-1?"في البيت":v===57?"وصلت للنهاية":"على المسار "+v)).join(" | ");
+
+ $("playerTags").innerHTML=Array.from(
+  {length:count},
+  (_,i)=>`<span class="player-tag">${symbols[i]} ${names[i]}</span>`
+ ).join("");
+
+ $("piecesInfo").textContent=positions[turn].map((v,i)=>
+  "قطعة "+(i+1)+": "+
+  (v===-1?"في البيت":v===57?"وصلت للنهاية":"على المسار "+v)
+ ).join(" | ");
 }
+
 function canMove(i){
  let v=positions[turn][i];
+
  if(v===-1)return rollValue===6;
+
  return v>=0&&v<57&&v+rollValue<=57;
 }
+
 function rollDice(){
  if(waiting||finished)return;
+
  rollValue=Math.floor(Math.random()*6)+1;
+
  $("dice").textContent=["⚀","⚁","⚂","⚃","⚄","⚅"][rollValue-1];
+
  playSound(350+rollValue*90,.2);
+
  waiting=true;
+
  let valid=positions[turn].some((v,i)=>canMove(i));
+
  if(!valid){
- waiting=false;
- $("gameMessage").textContent="ما عندك حركة ممكنة، ينتقل الدور.";
- if(rollValue!==6)turn=(turn+1)%count;
- draw();return;
+  waiting=false;
+  $("gameMessage").textContent="ما عندك حركة ممكنة، ينتقل الدور.";
+
+  if(rollValue!==6)turn=(turn+1)%count;
+
+  draw();
+  return;
  }
+
  $("gameMessage").textContent="🎯 اختر القطعة المضيئة لتحريكها";
  draw();
 }
+
 function movePiece(i){
  if(!waiting||finished)return;
  if(!canMove(i))return alert("هذه القطعة لا يمكن تحريكها بهذا الرقم");
+
  let old=positions[turn][i];
  let next=old===-1?0:old+rollValue;
+
  positions[turn][i]=next;
  playSound(650,.13);
+
  if(next<52){
- let landing=(starts[turn]+next)%52;
- if(!safe.includes(landing)){
- positions.forEach((group,p)=>{
- if(p===turn)return;
- group.forEach((v,j)=>{
- if(v>=0&&v<52&&(starts[p]+v)%52===landing){
- group[j]=-1;playSound(220,.25);
- });
- });
+  let landing=(starts[turn]+next)%52;
+
+  if(!safe.includes(landing)){
+   positions.forEach((group,p)=>{
+    if(p===turn)return;
+
+    group.forEach((v,j)=>{
+     if(v>=0&&v<52&&(starts[p]+v)%52===landing){
+      group[j]=-1;
+      playSound(220,.25);
+     }
+    });
+   });
+  }
  }
- }
+
  if(positions[turn].every(v=>v===57)){
- finished=true;waiting=false;draw();
- $("gameMessage").textContent="🏆 فاز اللاعب "+names[turn]+"!";
- playSound(850,.5);return;
+  finished=true;
+  waiting=false;
+  draw();
+
+  $("gameMessage").textContent="🏆 فاز اللاعب "+names[turn]+"!";
+  playSound(850,.5);
+  return;
  }
+
  waiting=false;
- if(rollValue!==6)turn=(turn+1)%count;
- $("gameMessage").textContent=rollValue===6?"ممتاز! عندك رمية إضافية 🎉":"تم تحريك القطعة";
+
+ if(rollValue!==6){
+  turn=(turn+1)%count;
+ }
+
+ $("gameMessage").textContent=rollValue===6
+  ?"ممتاز! عندك رمية إضافية 🎉"
+  :"تم تحريك القطعة";
+
  draw();
 }
+
 load();
 </script>
 </body>

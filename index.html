@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لَمّة PLAY</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:linear-gradient(145deg,#101b35,#182e50);
+ color:white;text-align:center;
+}
+header{padding:25px}
+.logo{font-size:42px;font-weight:bold;color:#ffd45c}
+.subtitle{color:#cbd5e1}
+.card{
+ background:#fff;color:#17233d;
+ margin:18px auto;padding:22px;
+ border-radius:22px;max-width:430px;
+ width:92%;
+}
+button{
+ border:0;border-radius:13px;
+ padding:14px 22px;margin:7px;
+ background:#f4c542;color:#18233c;
+ font-size:17px;font-weight:bold;
+ cursor:pointer;
+}
+input{
+ padding:13px;border:1px solid #bbb;
+ border-radius:10px;width:90%;margin:8px;
+}
+.board{
+ display:grid;grid-template-columns:repeat(3,1fr);
+ gap:5px;max-width:310px;margin:15px auto;
+}
+.cell{
+ background:#e8edf5;color:#18233c;
+ height:75px;border-radius:9px;
+ display:flex;align-items:center;
+ justify-content:center;font-size:25px;
+}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<header>
+ <div class="logo">🎲 لَمّة PLAY</div>
+ <p class="subtitle">اللعبة تجمعنا ❤️</p>
+</header>
+
+<section class="card" id="home">
+ <h2>أهلاً بيك بلَمّة PLAY</h2>
+ <input id="player" placeholder="اكتب اسم اللاعب">
+ <button onclick="login()">دخول اللعبة</button>
+ <p>مجانية بالكامل ❤️</p>
+</section>
+
+<section class="card hidden" id="menu">
+ <h2 id="welcome"></h2>
+ <p id="playerId"></p>
+ <button onclick="start(2)">لعب لاعبين</button>
+ <button onclick="start(4)">لعب أربعة لاعبين</button>
+</section>
+
+<section class="card hidden" id="game">
+ <h2>🎲 لعبة لَمّة</h2>
+ <p id="turn"></p>
+ <div class="board" id="board"></div>
+ <h3 id="dice">نتيجة النرد: -</h3>
+ <button onclick="roll()">ارمِ النرد 🎲</button>
+ <button onclick="back()">رجوع</button>
+</section>
+
+<script>
+let name="",players=2,turn=0,positions=[],dice=0;
+function login(){
+ name=document.getElementById("player").value.trim();
+ if(!name){alert("اكتب اسمك أولاً");return;}
+ document.getElementById("home").classList.add("hidden");
+ document.getElementById("menu").classList.remove("hidden");
+ document.getElementById("welcome").textContent="أهلاً "+name;
+ document.getElementById("playerId").textContent=
+ "معرّفك: LAMMA-"+Math.floor(100000+Math.random()*900000);
+}
+function start(n){
+ players=n;turn=0;positions=Array(n).fill(0);
+ document.getElementById("menu").classList.add("hidden");
+ document.getElementById("game").classList.remove("hidden");
+ draw();
+}
+function roll(){
+ dice=Math.floor(Math.random()*6)+1;
+ positions[turn]=Math.min(57,positions[turn]+dice);
+ document.getElementById("dice").textContent="نتيجة النرد: "+dice;
+ if(positions[turn]===57){
+  alert("مبروك! اللاعب "+(turn+1)+" فاز!");
+  back();return;
+ }
+ if(dice!==6)turn=(turn+1)%players;
+ draw();
+}
+function draw(){
+ document.getElementById("turn").textContent=
+ "دور اللاعب رقم "+(turn+1);
+ let b=document.getElementById("board");
+ b.innerHTML="";
+ positions.forEach((p,i)=>{
+ let c=document.createElement("div");
+ c.className="cell";
+ c.textContent=["🔴","🟢","🟡","🔵"][i]+" "+p;
+ b.appendChild(c);
+ });
+}
+function back(){
+ document.getElementById("game").classList.add("hidden");
+ document.getElementById("menu").classList.remove("hidden");
+}
+</script>
+</body>
+</html>

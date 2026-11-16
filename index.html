@@ -2,119 +2,207 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>لَمّة PLAY</title>
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;
- font-family:Arial,sans-serif;
- background:linear-gradient(145deg,#101b35,#182e50);
- color:white;text-align:center;
+ margin:0;background:#10182b;color:white;
+ font-family:Arial,sans-serif;text-align:center;
 }
-header{padding:25px}
-.logo{font-size:42px;font-weight:bold;color:#ffd45c}
-.subtitle{color:#cbd5e1}
-.card{
- background:#fff;color:#17233d;
- margin:18px auto;padding:22px;
- border-radius:22px;max-width:430px;
- width:92%;
+header{padding:18px;color:#ffd45c;font-size:30px;font-weight:bold}
+#menu,#game{
+ max-width:650px;margin:12px auto;padding:15px;
+}
+.panel{
+ background:#202e48;border-radius:18px;padding:18px;
+ margin:12px auto;
 }
 button{
- border:0;border-radius:13px;
- padding:14px 22px;margin:7px;
- background:#f4c542;color:#18233c;
- font-size:17px;font-weight:bold;
- cursor:pointer;
+ border:0;border-radius:12px;padding:13px 20px;
+ margin:6px;font-size:17px;font-weight:bold;
+ background:#ffd45c;color:#18233b;cursor:pointer;
 }
-input{
- padding:13px;border:1px solid #bbb;
- border-radius:10px;width:90%;margin:8px;
-}
-.board{
- display:grid;grid-template-columns:repeat(3,1fr);
- gap:5px;max-width:310px;margin:15px auto;
+input{padding:13px;border-radius:10px;border:0}
+.hidden{display:none!important}
+#board{
+ display:grid;grid-template-columns:repeat(15,1fr);
+ width:min(94vw,540px);aspect-ratio:1;
+ margin:15px auto;background:#fff;
+ border:5px solid #fff;border-radius:8px;
+ overflow:hidden;
 }
 .cell{
- background:#e8edf5;color:#18233c;
- height:75px;border-radius:9px;
- display:flex;align-items:center;
- justify-content:center;font-size:25px;
+ position:relative;display:flex;align-items:center;
+ justify-content:center;border:1px solid #d4d9e2;
+ font-size:clamp(8px,2.5vw,17px);
+ color:#18233b;
 }
-.hidden{display:none}
+.red{background:#ed5656}
+.green{background:#48ba79}
+.yellow{background:#f4d34f}
+.blue{background:#5689e9}
+.track{background:#f8fafc}
+.center{background:conic-gradient(#48ba79 0 25%,#f4d34f 0 50%,#5689e9 0 75%,#ed5656 0)}
+.token{
+ width:80%;height:80%;border-radius:50%;
+ border:2px solid white;display:flex;
+ align-items:center;justify-content:center;
+ color:white;font-weight:bold;
+ box-shadow:0 1px 4px #333;
+ cursor:pointer;
+}
+.token.red{background:#dc3434}
+.token.green{background:#159653}
+.token.yellow{background:#d5a900}
+.token.blue{background:#2863ca}
+#dice{font-size:48px;margin:10px}
+#status{font-size:19px;font-weight:bold}
 </style>
 </head>
 <body>
-<header>
- <div class="logo">🎲 لَمّة PLAY</div>
- <p class="subtitle">اللعبة تجمعنا ❤️</p>
-</header>
+<header>🎲 لَمّة PLAY</header>
 
-<section class="card" id="home">
- <h2>أهلاً بيك بلَمّة PLAY</h2>
- <input id="player" placeholder="اكتب اسم اللاعب">
- <button onclick="login()">دخول اللعبة</button>
- <p>مجانية بالكامل ❤️</p>
+<section id="menu" class="panel">
+<h2>أهلاً بيك باللعبة ❤️</h2>
+<input id="playerName" placeholder="اسم اللاعب">
+<p>اختار عدد اللاعبين</p>
+<button onclick="startGame(2)">لاعبين</button>
+<button onclick="startGame(4)">4 لاعبين</button>
 </section>
 
-<section class="card hidden" id="menu">
- <h2 id="welcome"></h2>
- <p id="playerId"></p>
- <button onclick="start(2)">لعب لاعبين</button>
- <button onclick="start(4)">لعب أربعة لاعبين</button>
-</section>
-
-<section class="card hidden" id="game">
- <h2>🎲 لعبة لَمّة</h2>
- <p id="turn"></p>
- <div class="board" id="board"></div>
- <h3 id="dice">نتيجة النرد: -</h3>
- <button onclick="roll()">ارمِ النرد 🎲</button>
- <button onclick="back()">رجوع</button>
+<section id="game" class="hidden">
+<div class="panel">
+<div id="status">دور اللاعب الأحمر</div>
+<div id="dice">🎲</div>
+<button onclick="rollDice()">ارمِ النرد</button>
+<button onclick="backMenu()">رجوع</button>
+</div>
+<div id="board"></div>
+<div class="panel">
+<div id="message">ارمِ النرد حتى تبدأ اللعب</div>
+<div id="pieces"></div>
+</div>
 </section>
 
 <script>
-let name="",players=2,turn=0,positions=[],dice=0;
-function login(){
- name=document.getElementById("player").value.trim();
- if(!name){alert("اكتب اسمك أولاً");return;}
- document.getElementById("home").classList.add("hidden");
- document.getElementById("menu").classList.remove("hidden");
- document.getElementById("welcome").textContent="أهلاً "+name;
- document.getElementById("playerId").textContent=
- "معرّفك: LAMMA-"+Math.floor(100000+Math.random()*900000);
-}
-function start(n){
- players=n;turn=0;positions=Array(n).fill(0);
+const colors=["red","green","yellow","blue"];
+const names=["الأحمر","الأخضر","الأصفر","الأزرق"];
+let players=2,turn=0,dice=0,gameOver=false;
+let pieces=[],pending=false;
+
+function startGame(n){
+ players=n;turn=0;gameOver=false;pending=false;
+ pieces=Array.from({length:n},()=>[-1,-1,-1,-1]);
  document.getElementById("menu").classList.add("hidden");
  document.getElementById("game").classList.remove("hidden");
  draw();
 }
-function roll(){
+
+function draw(){
+ const board=document.getElementById("board");
+ board.innerHTML="";
+ for(let r=0;r<15;r++){
+  for(let c=0;c<15;c++){
+   let el=document.createElement("div");
+   el.className="cell";
+   if(r<6&&c<6)el.classList.add("red");
+   else if(r<6&&c>8)el.classList.add("green");
+   else if(r>8&&c<6)el.classList.add("blue");
+   else if(r>8&&c>8)el.classList.add("yellow");
+   else el.classList.add("track");
+   if(r>=6&&r<=8&&c>=6&&c<=8){
+    el.className="cell";
+    el.classList.add("center");
+    if(r===7&&c===7)el.textContent="🏆";
+   }
+   board.appendChild(el);
+  }
+ }
+ // مناطق البيوت
+ const homes=[
+  [[1,1],[1,3],[3,1],[3,3]],
+  [[1,11],[1,13],[3,11],[3,13]],
+  [[11,11],[11,13],[13,11],[13,13]],
+  [[11,1],[11,3],[13,1],[13,3]]
+ ];
+ homes.forEach((home,p)=>{
+  if(p>=players)return;
+  home.forEach((pos,i)=>{
+   const cell=board.children[pos[0]*15+pos[1]];
+   const t=document.createElement("div");
+   t.className="token "+colors[p];
+   t.textContent=pieces[p][i]===-1?"●":pieces[p][i];
+   t.title="قطعة "+(i+1);
+   cell.appendChild(t);
+  });
+ });
+ document.getElementById("status").textContent=
+ "دور اللاعب "+names[turn];
+ document.getElementById("pieces").textContent=
+ "قطع اللاعب: "+pieces[turn].join(" | ");
+}
+
+function rollDice(){
+ if(gameOver||pending)return;
  dice=Math.floor(Math.random()*6)+1;
- positions[turn]=Math.min(57,positions[turn]+dice);
- document.getElementById("dice").textContent="نتيجة النرد: "+dice;
- if(positions[turn]===57){
-  alert("مبروك! اللاعب "+(turn+1)+" فاز!");
-  back();return;
+ document.getElementById("dice").textContent=
+ ["⚀","⚁","⚂","⚃","⚄","⚅"][dice-1];
+ document.getElementById("message").textContent=
+ "طلعتلك "+dice+" — اختار قطعة تحركها";
+ pending=true;
+}
+
+function movePiece(i){
+ if(!pending||gameOver)return;
+ let pos=pieces[turn][i];
+ if(pos===-1){
+  if(dice!==6){
+   document.getElementById("message").textContent=
+   "لازم تطلع 6 حتى تخرج القطعة من البيت";
+   return;
+  }
+  pieces[turn][i]=0;
+ }else{
+  if(pos+dice>57){
+   document.getElementById("message").textContent=
+   "تحتاج رقم مضبوط حتى تدخل للنهاية";
+   return;
+  }
+  pieces[turn][i]+=dice;
+ }
+ pending=false;
+ if(pieces[turn].every(x=>x===57)){
+  gameOver=true;
+  document.getElementById("message").textContent=
+  "🏆 فاز اللاعب "+names[turn]+"!";
+  draw();return;
  }
  if(dice!==6)turn=(turn+1)%players;
+ document.getElementById("message").textContent=
+ dice===6?"مبروك! عندك رمية إضافية":"انتهى دورك";
  draw();
 }
-function draw(){
- document.getElementById("turn").textContent=
- "دور اللاعب رقم "+(turn+1);
- let b=document.getElementById("board");
- b.innerHTML="";
- positions.forEach((p,i)=>{
- let c=document.createElement("div");
- c.className="cell";
- c.textContent=["🔴","🟢","🟡","🔵"][i]+" "+p;
- b.appendChild(c);
- });
-}
-function back(){
+
+document.getElementById("board").addEventListener("click",e=>{
+ const cell=e.target.closest(".cell");
+ if(!cell||!pending)return;
+ const p=turn;
+ const homePositions=[
+  [[1,1],[1,3],[3,1],[3,3]],
+  [[1,11],[1,13],[3,11],[3,13]],
+  [[11,11],[11,13],[13,11],[13,13]],
+  [[11,1],[11,3],[13,1],[13,3]]
+ ];
+ let index=Array.from(document.getElementById("board").children).indexOf(cell);
+ let r=Math.floor(index/15),c=index%15;
+ let i=homePositions[p].findIndex(x=>x[0]===r&&x[1]===c);
+ if(i>=0){movePiece(i);return;}
+ document.getElementById("message").textContent=
+ "اختار إحدى قطعك الموجودة في البيت حالياً";
+});
+
+function backMenu(){
  document.getElementById("game").classList.add("hidden");
  document.getElementById("menu").classList.remove("hidden");
 }

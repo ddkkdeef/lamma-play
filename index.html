@@ -6,11 +6,7 @@
 <meta name="theme-color" content="#10182b">
 <title>لَمّة PLAY</title>
 <style>
-:root{
- --bg:#10182b;--panel:#202e48;--gold:#ffd45c;
- --white:#fff;--muted:#aab5c9;--red:#ed5555;
- --green:#28b875;--yellow:#f4ca42;--blue:#4789ed;
-}
+:root{--bg:#10182b;--panel:#202e48;--gold:#ffd45c;--muted:#aab5c9;--red:#ed5555;--green:#28b875;--yellow:#f4ca42;--blue:#4789ed}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:white;font-family:Arial,sans-serif}
 button,input{font:inherit}
@@ -25,7 +21,6 @@ main{max-width:650px;margin:auto;padding:10px 13px 95px}
 .panel{background:var(--panel);border:1px solid #34435d;border-radius:19px;padding:17px;margin-bottom:13px}
 .hidden{display:none!important}
 h2{font-size:20px;margin:5px 0 15px}
-h3{margin:5px 0 12px}
 p{color:var(--muted);line-height:1.7}
 input{width:100%;padding:14px;border-radius:12px;border:1px solid #52627c;background:#111d32;color:white;margin:7px 0;outline:none}
 button.full{width:100%;margin:6px 0}
@@ -46,10 +41,10 @@ button.full{width:100%;margin:6px 0}
 .bottom button b{display:block;font-size:21px;margin-bottom:3px}
 .bottom button.active{color:var(--gold)}
 .row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.row>*{flex:1}
+.row>*{flex:1;min-width:0}
 .badge{background:#344765;padding:6px 10px;border-radius:20px;font-size:12px;color:#fff}
 #board{display:grid;grid-template-columns:repeat(15,1fr);width:min(94vw,540px);aspect-ratio:1;margin:12px auto;background:white;border:4px solid white;border-radius:5px;overflow:hidden}
-.cell{border:1px solid #d4d9e2;background:#f8fafc;display:flex;align-items:center;justify-content:center;position:relative;min-width:0;min-height:0}
+.cell{border:1px solid #d4d9e2;background:#f8fafc;display:flex;align-items:center;justify-content:center;position:relative;min-width:0;min-height:0;flex-wrap:wrap}
 .cell.path{background:#fff}
 .cell.safe{background:#e5e7eb}
 .cell.home.red{background:#ef7777}
@@ -57,11 +52,11 @@ button.full{width:100%;margin:6px 0}
 .cell.home.yellow{background:#f5dc70}
 .cell.home.blue{background:#78a1ed}
 .cell.center{background:conic-gradient(#65c98d 0 25%,#f5dc70 0 50%,#78a1ed 0 75%,#ef7777 0)}
-.token{width:88%;height:88%;border-radius:50%;border:2px solid white;box-shadow:0 1px 4px #333;display:grid;place-items:center;color:white;font-weight:bold;font-size:clamp(8px,2vw,14px);cursor:pointer;z-index:2}
+.token{width:88%;height:88%;max-width:100%;max-height:100%;border-radius:50%;border:2px solid white;box-shadow:0 1px 4px #333;display:grid;place-items:center;color:white;font-weight:bold;font-size:clamp(7px,2vw,13px);cursor:pointer;z-index:2;flex-shrink:0}
 .token.red{background:#c92525}.token.green{background:#087e3d}
 .token.yellow{background:#b58b00}.token.blue{background:#2156b5}
 .token.selected{outline:3px solid #222;transform:scale(1.08)}
-#dice{font-size:48px;text-align:center;margin:7px}
+#dice{font-size:52px;text-align:center;margin:7px}
 #status{text-align:center;color:var(--gold);font-weight:bold}
 .player-list{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}
 .player-tag{padding:8px 12px;background:#344563;border-radius:12px;font-size:13px}
@@ -73,20 +68,19 @@ button.full{width:100%;margin:6px 0}
 .bubble{background:#344563;padding:9px 12px;border-radius:13px;margin:8px 0;max-width:85%;width:fit-content}
 .bubble.mine{background:#67552b;margin-right:auto}
 .note{font-size:12px;color:#aab5c9;line-height:1.7}
+#gameMessage{text-align:center;min-height:35px}
 </style>
 </head>
 <body>
 <header>🎲 لَمّة PLAY<small>اللعبة تجمعنا ❤️</small></header>
-
 <main>
-<!-- تسجيل الحساب -->
+
 <section id="login" class="panel hidden">
 <div class="hero"><div class="logo">🎲</div><h1>أهلاً بك في لَمّة PLAY</h1><p>أنشئ حسابك وابدأ اللعب</p></div>
 <input id="loginName" maxlength="18" placeholder="اكتب اسم اللاعب">
 <button class="primary full" onclick="createAccount()">إنشاء الحساب والدخول</button>
 </section>
 
-<!-- الرئيسية -->
 <section id="homePage">
 <div class="panel profile">
 <div class="avatar">👤</div>
@@ -94,8 +88,7 @@ button.full{width:100%;margin:6px 0}
 <span class="badge">مجاني</span>
 </div>
 <div class="panel hero">
-<div class="logo">🎲</div>
-<h1>اللعبة تجمعنا</h1>
+<div class="logo">🎲</div><h1>اللعبة تجمعنا</h1>
 <p>اجمع أصدقاءك وابدأ المتعة!</p>
 <button class="primary full" onclick="showPage('playPage')">ابدأ اللعب الآن</button>
 </div>
@@ -110,7 +103,6 @@ button.full{width:100%;margin:6px 0}
 </div>
 </section>
 
-<!-- اللعب -->
 <section id="playPage" class="hidden">
 <div class="panel">
 <h2>🎲 اختر طريقة اللعب</h2>
@@ -134,23 +126,22 @@ button.full{width:100%;margin:6px 0}
 </div>
 <div id="board"></div>
 <div class="panel">
-<strong>قطعك المتاحة</strong>
+<strong>قطع اللاعب الحالي</strong>
 <div id="piecesInfo" class="note">ارمِ النرد أولاً</div>
 </div>
 </section>
 
-<!-- الأصدقاء -->
 <section id="friendsPage" class="hidden">
 <div class="panel">
 <h2>👥 الأصدقاء</h2>
 <input id="friendID" placeholder="أدخل معرّف اللاعب ID">
 <button class="primary full" onclick="addFriend()">إضافة صديق</button>
 <div id="friendsList"></div>
+<p class="note">هذه القائمة محلية على جهازك حالياً.</p>
 </div>
 <button class="secondary full" onclick="showPage('homePage')">رجوع</button>
 </section>
 
-<!-- الغرف -->
 <section id="roomsPage" class="hidden">
 <div class="panel">
 <h2>🏠 غرف اللعب</h2>
@@ -160,28 +151,24 @@ button.full{width:100%;margin:6px 0}
 <button class="secondary" onclick="renderRooms()">تحديث القائمة</button>
 </div>
 <div id="roomsList"></div>
-<p class="note">الغرف المعروضة حالياً محفوظة على هذا الجهاز فقط. مشاركة الغرف بين الأجهزة تتطلب خادماً.</p>
+<p class="note">الغرف محلية على هذا الجهاز. مشاركة الغرف بين الأجهزة تحتاج خادماً.</p>
 </div>
 <button class="secondary full" onclick="showPage('homePage')">رجوع</button>
 </section>
 
-<!-- المحادثات -->
 <section id="chatPage" class="hidden">
 <div class="panel">
 <h2>💬 المحادثات</h2>
-<div class="chat-log" id="chatLog">
-<div class="bubble">أهلاً بك في لَمّة PLAY ❤️</div>
-</div>
+<div class="chat-log" id="chatLog"><div class="bubble">أهلاً بك في لَمّة PLAY ❤️</div></div>
 <div class="row">
 <input id="chatInput" placeholder="اكتب رسالة..." maxlength="300">
 <button class="primary" onclick="sendMessage()">إرسال</button>
 </div>
-<p class="note">هذه محادثة تجريبية محلية. المحادثات المباشرة والصوتية بين اللاعبين تحتاج خادم واتصالاً حقيقياً.</p>
+<p class="note">هذه محادثة تجريبية محلية وليست دردشة بين الأجهزة.</p>
 </div>
 <button class="secondary full" onclick="showPage('homePage')">رجوع</button>
 </section>
 
-<!-- الهدايا -->
 <section id="giftsPage" class="hidden">
 <div class="panel">
 <h2>🎁 الهدايا</h2>
@@ -191,12 +178,11 @@ button.full{width:100%;margin:6px 0}
 <button class="menu-btn" onclick="gift('نجمة ⭐')"><span>⭐</span>نجمة</button>
 <button class="menu-btn" onclick="gift('تاج 👑')"><span>👑</span>تاج</button>
 </div>
-<p class="note">الهدايا هنا تجريبية ومجانية، ولا توجد عملات أو مشتريات في الإصدار الأول.</p>
+<p class="note">الهدايا تجريبية ومجانية.</p>
 </div>
 <button class="secondary full" onclick="showPage('homePage')">رجوع</button>
 </section>
 
-<!-- الحساب -->
 <section id="profilePage" class="hidden">
 <div class="panel">
 <h2>👤 حسابي</h2>
@@ -236,8 +222,22 @@ const route=[
 [10,6],[9,6],[8,5],[8,4],[8,3],[8,2],
 [8,1],[8,0],[7,0],[6,0]
 ];
-let account=null, friends=[],rooms=[],chat=[];
+const homes=[
+[[1,1],[1,4],[4,1],[4,4]],
+[[1,10],[1,13],[4,10],[4,13]],
+[[10,10],[10,13],[13,10],[13,13]],
+[[10,1],[10,4],[13,1],[13,4]]
+];
+const endPaths=[
+[[7,1],[7,2],[7,3],[7,4],[7,5],[7,6]],
+[[1,7],[2,7],[3,7],[4,7],[5,7],[6,7]],
+[[7,13],[7,12],[7,11],[7,10],[7,9],[7,8]],
+[[13,7],[12,7],[11,7],[10,7],[9,7],[8,7]]
+];
+
+let account=null,friends=[],rooms=[];
 let count=2,turn=0,positions=[],rollValue=0,waiting=false,finished=false;
+let soundOn=true;
 
 function load(){
  try{
@@ -280,7 +280,7 @@ function changeName(){
  account.name=n;save();updateProfile();alert("تم حفظ الاسم");
 }
 function copyID(){
- if(navigator.clipboard)navigator.clipboard.writeText(account.id).then(()=>alert("تم نسخ ID"));
+ if(navigator.clipboard)navigator.clipboard.writeText(account.id).then(()=>alert("تم نسخ ID")).catch(()=>alert("معرّفك: "+account.id));
  else alert("معرّفك: "+account.id);
 }
 function logout(){
@@ -295,7 +295,8 @@ function addFriend(){
  friends.push(id);save();$("friendID").value="";renderFriends();
 }
 function renderFriends(){
- $("friendsList").innerHTML=friends.length?"":"<p>ما عندك أصدقاء مضافين بعد.</p>";
+ $("friendsList").innerHTML="";
+ if(!friends.length)$("friendsList").innerHTML="<p>ما عندك أصدقاء مضافين بعد.</p>";
  friends.forEach(id=>{
  let d=document.createElement("div");d.className="list-item";
  let s=document.createElement("span");s.className="grow";s.textContent=id;
@@ -310,11 +311,11 @@ function createRoom(){
  rooms.push(room);save();$("roomName").value="";renderRooms();
 }
 function renderRooms(){
- $("roomsList").innerHTML=rooms.length?"":"<p>لا توجد غرف حالياً. أنشئ غرفتك الأولى!</p>";
+ $("roomsList").innerHTML="";
+ if(!rooms.length)$("roomsList").innerHTML="<p>لا توجد غرف حالياً. أنشئ غرفتك الأولى!</p>";
  rooms.forEach(r=>{
  let d=document.createElement("div");d.className="list-item";
- let s=document.createElement("span");s.className="grow";
- s.textContent=r.name+" · "+r.id;
+ let s=document.createElement("span");s.className="grow";s.textContent=r.name+" · "+r.id;
  let b=document.createElement("button");b.className="primary";b.textContent="دخول";
  b.onclick=()=>alert("هذه غرفة محلية تجريبية. اللعب الجماعي عبر الإنترنت يحتاج خادماً.");
  d.append(s,b);$("roomsList").append(d);
@@ -323,17 +324,35 @@ function renderRooms(){
 function sendMessage(){
  let value=$("chatInput").value.trim();if(!value)return;
  let b=document.createElement("div");b.className="bubble mine";b.textContent=account.name+": "+value;
- $("chatLog").append(b);$("chatInput").value="";
- $("chatLog").scrollTop=$("chatLog").scrollHeight;
+ $("chatLog").append(b);$("chatInput").value="";$("chatLog").scrollTop=$("chatLog").scrollHeight;
 }
 $("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter")sendMessage()});
 function gift(name){alert("🎁 اخترت "+name+" — هدية تجريبية مجانية!")}
+function playSound(freq=500,duration=.12){
+ if(!soundOn)return;
+ try{
+ let ctx=new (window.AudioContext||window.webkitAudioContext)();
+ let osc=ctx.createOscillator(),gain=ctx.createGain();
+ osc.frequency.value=freq;osc.type="sine";
+ gain.gain.setValueAtTime(.08,ctx.currentTime);
+ gain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+duration);
+ osc.connect(gain);gain.connect(ctx.destination);
+ osc.start();osc.stop(ctx.currentTime+duration);
+ osc.onended=()=>ctx.close();
+ }catch(e){}
+}
 function startGame(n){count=n;newGame();showPage("gamePage")}
 function newGame(){
  turn=0;rollValue=0;waiting=false;finished=false;
  positions=Array.from({length:count},()=>[-1,-1,-1,-1]);
- $("dice").textContent="🎲";$("gameMessage").textContent="ارمِ النرد للبدء";
+ $("dice").textContent="🎲";
+ $("gameMessage").textContent="ارمِ النرد للبدء";
  draw();
+}
+function getPoint(p,pos){
+ if(pos===-1)return homes[p][0];
+ if(pos>=52)return endPaths[p][Math.min(pos-52,5)];
+ return route[(starts[p]+pos)%52];
 }
 function draw(){
  let board=$("board");board.innerHTML="";
@@ -348,64 +367,58 @@ function draw(){
  if(r>=6&&r<=8&&c>=6&&c<=8)el.className="cell center";
  el.dataset.r=r;el.dataset.c=c;board.append(el);
  }
- // مناطق انتظار القطع
- const homes=[
- [[1,1],[1,4],[4,1],[4,4]],
- [[1,10],[1,13],[4,10],[4,13]],
- [[10,10],[10,13],[13,10],[13,13]],
- [[10,1],[10,4],[13,1],[13,4]]
- ];
  positions.forEach((group,p)=>group.forEach((pos,i)=>{
- let point;
- if(pos===-1)point=homes[p][i];
- else if(pos>=52){
- const endPaths=[
- [[7,1],[7,2],[7,3],[7,4],[7,5],[7,6]],
- [[1,7],[2,7],[3,7],[4,7],[5,7],[6,7]],
- [[7,13],[7,12],[7,11],[7,10],[7,9],[7,8]],
- [[13,7],[12,7],[11,7],[10,7],[9,7],[8,7]]
- ];
- point=endPaths[p][Math.min(pos-52,5)];
- }else point=route[(starts[p]+pos)%52];
+ let point=getPoint(p,pos);
  let cell=board.querySelector(`[data-r="${point[0]}"][data-c="${point[1]}"]`);
  if(!cell)return;
- let token=document.createElement("div");token.className="token "+colors[p];
- token.textContent=i+1;token.onclick=()=>movePiece(i);cell.append(token);
+ let token=document.createElement("button");
+ token.className="token "+colors[p];
+ token.textContent=i+1;
+ token.setAttribute("aria-label","قطعة "+(i+1));
+ if(p===turn&&waiting&&canMove(i))token.classList.add("selected");
+ token.onclick=()=>movePiece(i);
+ cell.append(token);
  }));
  $("status").textContent="دور اللاعب "+names[turn];
  $("playerTags").innerHTML=Array.from({length:count},(_,i)=>`<span class="player-tag">${symbols[i]} ${names[i]}</span>`).join("");
  $("piecesInfo").textContent=positions[turn].map((v,i)=>"قطعة "+(i+1)+": "+(v===-1?"في البيت":v===57?"وصلت للنهاية":"على المسار "+v)).join(" | ");
 }
+function canMove(i){
+ let v=positions[turn][i];
+ if(v===-1)return rollValue===6;
+ return v>=0&&v<57&&v+rollValue<=57;
+}
 function rollDice(){
  if(waiting||finished)return;
  rollValue=Math.floor(Math.random()*6)+1;
  $("dice").textContent=["⚀","⚁","⚂","⚃","⚄","⚅"][rollValue-1];
+ playSound(350+rollValue*90,.2);
  waiting=true;
- let valid=positions[turn].some(v=>
- (v===-1&&rollValue===6)||(v>=0&&v<57&&v+rollValue<=57)
- );
+ let valid=positions[turn].some((v,i)=>canMove(i));
  if(!valid){
- $("gameMessage").textContent="لا توجد حركة ممكنة. ينتقل الدور.";
- waiting=false;if(rollValue!==6)turn=(turn+1)%count;
+ waiting=false;
+ $("gameMessage").textContent="ما عندك حركة ممكنة، ينتقل الدور.";
+ if(rollValue!==6)turn=(turn+1)%count;
  draw();return;
  }
- $("gameMessage").textContent="اختر القطعة التي تريد تحريكها";
+ $("gameMessage").textContent="🎯 اختر القطعة المضيئة لتحريكها";
+ draw();
 }
 function movePiece(i){
  if(!waiting||finished)return;
+ if(!canMove(i))return alert("هذه القطعة لا يمكن تحريكها بهذا الرقم");
  let old=positions[turn][i];
- if(old===-1&&rollValue!==6)return alert("تحتاج إلى رقم 6 لإخراج القطعة");
  let next=old===-1?0:old+rollValue;
- if(next>57)return alert("تحتاج رقماً مضبوطاً للوصول إلى النهاية");
  positions[turn][i]=next;
- // أكل قطع الخصم عند الوقوف على خانة غير آمنة
+ playSound(650,.13);
  if(next<52){
  let landing=(starts[turn]+next)%52;
  if(!safe.includes(landing)){
  positions.forEach((group,p)=>{
  if(p===turn)return;
  group.forEach((v,j)=>{
- if(v>=0&&v<52&&(starts[p]+v)%52===landing)group[j]=-1;
+ if(v>=0&&v<52&&(starts[p]+v)%52===landing){
+ group[j]=-1;playSound(220,.25);
  });
  });
  }
@@ -413,7 +426,7 @@ function movePiece(i){
  if(positions[turn].every(v=>v===57)){
  finished=true;waiting=false;draw();
  $("gameMessage").textContent="🏆 فاز اللاعب "+names[turn]+"!";
- return;
+ playSound(850,.5);return;
  }
  waiting=false;
  if(rollValue!==6)turn=(turn+1)%count;

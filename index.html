@@ -146,7 +146,7 @@ button.full{width:100%;margin:6px 0}
 <div class="row">
 <button class="primary" onclick="rollDice()">ارمِ النرد</button>
 <button class="secondary" onclick="newGame()">إعادة اللعبة</button>
-<button class="secondary" onclick="showPage('homePage')">خروج</button>
+<button class="secondary" onclick="leaveRoom()">خروج</button>
 </div>
 <p id="gameMessage" class="note">ارمِ النرد للبدء.</p>
 </div>
@@ -218,7 +218,6 @@ button.full{width:100%;margin:6px 0}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// بيانات الاتصال العامة بمشروعك
 const SUPABASE_URL = "https://gjamnwkwnjdllsewzapg.supabase.co";
 const SUPABASE_KEY = "sb_publishable_u9qbzgIafeo4ZFFqCcXqhg_THl4MNha";
 
@@ -366,6 +365,17 @@ async function copyID(){
  }catch(e){alert("معرّفك: "+account.playerID)}
 }
 
+async function leaveRoom(){
+ if(roomChannel){
+  await db.removeChannel(roomChannel);
+  roomChannel=null;
+ }
+ currentRoom=null;
+ roomPlayers=[];
+ gameMode="local";
+ showPage("homePage");
+}
+
 async function logout(){
  if(!confirm("تريد تسجيل الخروج؟"))return;
  if(roomChannel)await db.removeChannel(roomChannel);
@@ -373,7 +383,6 @@ async function logout(){
  location.reload();
 }
 
-// الأصدقاء: البحث عن حساب بالمعرّف
 async function addFriend(){
  const id=$("friendID").value.trim().toUpperCase();
  if(!id)return alert("أدخل معرّف اللاعب");
@@ -404,23 +413,30 @@ function renderFriends(){
  });
 }
 
-// الغرف
 function makeCode(){
  return Math.random().toString(36).substring(2,8).toUpperCase();
 }
 
 async function createRoom(n){
+ if(!account)return alert("سجّل الدخول أولاً");
  const name=$("roomName").value.trim()||"غرفة لَمّة";
+ let createdRoom=null;
  try{
   const code=makeCode();
   const {data:room,error}=await db.from("rooms").insert({
    room_code:code,owner_id:account.id,max_players:n,status:"waiting"
   }).select().single();
   if(error)throw error;
+  createdRoom=room;
+
   const {error:joinError}=await db.from("room_players").insert({
    room_id:room.id,user_id:account.id,seat:1
   });
-  if(joinError)throw joinError;
+  if(joinError){
+   await db.from("rooms").delete().eq("id",room.id);
+   throw joinError;
+  }
+
   $("roomName").value="";
   alert("تم إنشاء الغرفة. رمزها: "+code);
   await enterRoom(room);
@@ -428,26 +444,46 @@ async function createRoom(n){
 }
 
 async function joinRoom(){
+ if(!account)return alert("سجّل الدخول أولاً");
  const code=$("joinCode").value.trim().toUpperCase();
  if(!code)return alert("اكتب رمز الغرفة");
+
  try{
-  const {data:room,error}=await db.from("rooms").select("*").eq("room_code",code).eq("status","waiting").maybeSingle();
+  const {data:room,error}=await db.from("rooms")
+   .select("*")
+   .eq("room_code",code)
+   .eq("status","waiting")
+   .maybeSingle();
+
   if(error)throw error;
   if(!room)return alert("الغرفة غير موجودة أو بدأت اللعبة");
-  const {data:members,error:memberError}=await db.from("room_players").select("user_id,seat").eq("room_id",room.id);
+
+  const {data:members,error:memberError}=await db.from("room_players")
+   .select("user_id,seat")
+   .eq("room_id",room.id);
+
   if(memberError)throw memberError;
+
   if(members.some(x=>x.user_id===account.id)){
-   return enterRoom(room);
+   await enterRoom(room);
+   return;
   }
+
   if(members.length>=room.max_players)return alert("الغرفة ممتلئة");
+
   const used=members.map(x=>x.seat);
   const seat=[1,2,3,4].find(x=>!used.includes(x));
+  if(!seat)return alert("لا يوجد مقعد فارغ");
+
   const {error:joinError}=await db.from("room_players").insert({
    room_id:room.id,user_id:account.id,seat
   });
+
   if(joinError)throw joinError;
+
   $("joinCode").value="";
   await enterRoom(room);
+
  }catch(e){notifyError(e)}
 }
 
@@ -455,7 +491,10 @@ async function renderRooms(){
  const box=$("roomsList");
  box.innerHTML="<p>جاري تحميل الغرف...</p>";
  try{
-  const {data,error}=await db.from("rooms").select("*").eq("status","waiting").order("created_at",{ascending:false}).limit(20);
+  const {data,error}=await db.from("rooms").select("*")
+   .eq("status","waiting")
+   .order("created_at",{ascending:false})
+   .limit(20);
   if(error)throw error;
   box.innerHTML="";
   if(!data.length){box.innerHTML="<p>لا توجد غرف انتظار حالياً.</p>";return}
@@ -470,40 +509,115 @@ async function renderRooms(){
  }catch(e){box.innerHTML="<p>تعذر تحميل الغرف: "+e.message+"</p>"}
 }
 
+/* تم تعديل دخول الغرفة:
+   إظهار صفحة اللعب أولاً، ثم محاولة تحميل المزامنة
+   حتى لا يمنع خطأ game_states دخول اللاعب. */
 async function enterRoom(room){
+ if(!account)return alert("سجّل الدخول أولاً");
+
  currentRoom=room;
  gameMode="online";
- const {data:members,error}=await db.from("room_players").select("user_id,seat").eq("room_id",room.id).order("seat");
- if(error)throw error;
- roomPlayers=members;
- count=room.max_players;
- $("roomInfo").textContent="رمز الغرفة: "+room.room_code+" · عدد اللاعبين: "+members.length+"/"+count;
- const {data:state,error:stateError}=await db.from("game_states").select("*").eq("room_id",room.id).maybeSingle();
- if(stateError)throw stateError;
- if(state?.game_data){
-  applyGameState(state.game_data);
- }else{
+
+ try{
+  const {data:members,error}=await db.from("room_players")
+   .select("user_id,seat")
+   .eq("room_id",room.id)
+   .order("seat");
+
+  if(error)throw error;
+
+  roomPlayers=members||[];
+  count=Number(room.max_players)||2;
+
+  $("roomInfo").textContent=
+   "رمز الغرفة: "+room.room_code+
+   " · عدد اللاعبين: "+roomPlayers.length+"/"+count;
+
   resetGameState();
-  if(members[0]?.user_id===account.id)await saveGameState();
+
+  // الدخول إلى صفحة اللعب لا يعتمد على جدول game_states
+  showPage("gamePage");
+
+  // تحميل حالة اللعبة بشكل منفصل
+  try{
+   const {data:state,error:stateError}=await db.from("game_states")
+    .select("*")
+    .eq("room_id",room.id)
+    .maybeSingle();
+
+   if(stateError)throw stateError;
+
+   if(state&&state.game_data){
+    applyGameState(state.game_data);
+   }else if(roomPlayers[0]?.user_id===account.id){
+    await saveGameState();
+   }
+
+  }catch(syncError){
+   console.error("Game state sync error:",syncError);
+   $("gameMessage").textContent=
+    "دخلت الغرفة بنجاح، لكن مزامنة اللعبة تحتاج إصلاحاً.";
+  }
+
+  try{
+   await subscribeRoom();
+  }catch(channelError){
+   console.error("Room subscription error:",channelError);
+  }
+
+  await loadMessages();
+
+ }catch(e){
+  console.error("Enter room error:",e);
+  alert("تعذر الدخول للغرفة: "+(e.message||"خطأ غير معروف"));
  }
- showPage("gamePage");
- await subscribeRoom();
- await loadMessages();
 }
 
 async function subscribeRoom(){
- if(roomChannel)await db.removeChannel(roomChannel);
+ if(!currentRoom)return;
+
+ if(roomChannel){
+  await db.removeChannel(roomChannel);
+  roomChannel=null;
+ }
+
  roomChannel=db.channel("room-"+currentRoom.id)
- .on("postgres_changes",{event:"*",schema:"public",table:"game_states",filter:"room_id=eq."+currentRoom.id},payload=>{
+ .on("postgres_changes",{
+  event:"*",
+  schema:"public",
+  table:"game_states",
+  filter:"room_id=eq."+currentRoom.id
+ },payload=>{
   if(payload.new?.game_data)applyGameState(payload.new.game_data);
  })
- .on("postgres_changes",{event:"*",schema:"public",table:"room_players",filter:"room_id=eq."+currentRoom.id},async()=>{
-  const {data}=await db.from("room_players").select("user_id,seat").eq("room_id",currentRoom.id).order("seat");
+ .on("postgres_changes",{
+  event:"*",
+  schema:"public",
+  table:"room_players",
+  filter:"room_id=eq."+currentRoom.id
+ },async()=>{
+  const {data,error}=await db.from("room_players")
+   .select("user_id,seat")
+   .eq("room_id",currentRoom.id)
+   .order("seat");
+
+  if(error){
+   console.error(error);
+   return;
+  }
+
   roomPlayers=data||[];
-  $("roomInfo").textContent="رمز الغرفة: "+currentRoom.room_code+" · عدد اللاعبين: "+roomPlayers.length+"/"+count;
+  $("roomInfo").textContent=
+   "رمز الغرفة: "+currentRoom.room_code+
+   " · عدد اللاعبين: "+roomPlayers.length+"/"+count;
   draw();
  })
- .on("postgres_changes",{event:"INSERT",schema:"public",table:"messages",filter:"room_id=eq."+currentRoom.id},payload=>{
+ .on("postgres_changes",{
+  event:"INSERT",
+  schema:"public",
+  table:"messages",
+  filter:"room_id=eq."+currentRoom.id
+ },payload=>{
   appendMessage(payload.new);
  })
  .subscribe();
@@ -520,25 +634,44 @@ function isMyTurn(){
 
 async function saveGameState(){
  if(gameMode!=="online"||!currentRoom||syncing)return;
+
  const state={count,turn,positions,rollValue,waiting,finished};
+
  const {error}=await db.from("game_states").upsert({
-  room_id:currentRoom.id,game_data:state,updated_at:new Date().toISOString()
+  room_id:currentRoom.id,
+  game_data:state,
+  updated_at:new Date().toISOString()
  },{onConflict:"room_id"});
- if(error)console.error("Game sync:",error.message);
+
+ if(error){
+  console.error("Game sync:",error.message);
+  $("gameMessage").textContent="اللعب محلي حالياً؛ مزامنة اللعبة لم تكتمل.";
+ }
 }
 
 function applyGameState(s){
  if(!s||!Array.isArray(s.positions))return;
+
  syncing=true;
- count=s.count;turn=s.turn;positions=s.positions;
- rollValue=s.rollValue;waiting=s.waiting;finished=s.finished;
- $("dice").textContent=rollValue?["⚀","⚁","⚂","⚃","⚄","⚅"][rollValue-1]:"🎲";
+ count=s.count;
+ turn=s.turn;
+ positions=s.positions;
+ rollValue=s.rollValue;
+ waiting=s.waiting;
+ finished=s.finished;
+
+ $("dice").textContent=rollValue?
+  ["⚀","⚁","⚂","⚃","⚄","⚅"][rollValue-1]:"🎲";
+
  draw();
  syncing=false;
 }
 
 function resetGameState(){
- turn=0;rollValue=0;waiting=false;finished=false;
+ turn=0;
+ rollValue=0;
+ waiting=false;
+ finished=false;
  positions=Array.from({length:count},()=>[-1,-1,-1,-1]);
  $("dice").textContent="🎲";
  $("gameMessage").textContent="ارمِ النرد للبدء";
@@ -546,13 +679,17 @@ function resetGameState(){
 }
 
 function startGame(n){
- gameMode="local";currentRoom=null;count=n;
+ gameMode="local";
+ currentRoom=null;
+ count=n;
  resetGameState();
  showPage("gamePage");
 }
 
 function newGame(){
- if(gameMode==="online"&&!isMyTurn())return alert("فقط اللاعب صاحب الدور يمكنه بدء اللعبة");
+ if(gameMode==="online"&&!isMyTurn())
+  return alert("فقط اللاعب صاحب الدور يمكنه بدء اللعبة");
+
  resetGameState();
  saveGameState();
 }
@@ -570,96 +707,152 @@ function canMove(i){
 }
 
 function draw(){
- const board=$("board");board.innerHTML="";
+ const board=$("board");
+ board.innerHTML="";
+
  for(let r=0;r<15;r++)for(let c=0;c<15;c++){
-  const el=document.createElement("div");el.className="cell";
+  const el=document.createElement("div");
+  el.className="cell";
+
   if(r<6&&c<6)el.classList.add("home","red");
   else if(r<6&&c>8)el.classList.add("home","green");
   else if(r>8&&c>8)el.classList.add("home","yellow");
   else if(r>8&&c<6)el.classList.add("home","blue");
+
   const ri=route.findIndex(p=>p[0]===r&&p[1]===c);
-  if(ri>=0){el.className="cell path";if(safe.includes(ri))el.classList.add("safe")}
+  if(ri>=0){
+   el.className="cell path";
+   if(safe.includes(ri))el.classList.add("safe");
+  }
+
   if(r>=6&&r<=8&&c>=6&&c<=8)el.className="cell center";
-  el.dataset.r=r;el.dataset.c=c;board.append(el);
+
+  el.dataset.r=r;
+  el.dataset.c=c;
+  board.append(el);
  }
+
  positions.forEach((group,p)=>{
   group.forEach((pos,i)=>{
    const point=getPoint(p,pos);
-   const cell=board.querySelector(`[data-r="${point[0]}"][data-c="${point[1]}"]`);
+   const cell=board.querySelector(
+    `[data-r="${point[0]}"][data-c="${point[1]}"]`
+   );
    if(!cell)return;
+
    const token=document.createElement("button");
-   token.className="token "+colors[p];token.textContent=i+1;
-   if(p===turn&&waiting&&canMove(i))token.classList.add("selected");
-   token.onclick=()=>movePiece(i);cell.append(token);
+   token.className="token "+colors[p];
+   token.textContent=i+1;
+
+   if(p===turn&&waiting&&canMove(i))
+    token.classList.add("selected");
+
+   token.onclick=()=>movePiece(i);
+   cell.append(token);
   });
  });
+
  $("status").textContent="دور اللاعب "+names[turn];
+
  $("playerTags").innerHTML=Array.from({length:count},(_,i)=>
-  `<span class="player-tag">${symbols[i]} ${names[i]}</span>`).join("");
+  `<span class="player-tag">${symbols[i]} ${names[i]}</span>`
+ ).join("");
+
  $("piecesInfo").textContent=positions[turn].map((v,i)=>
-  "قطعة "+(i+1)+": "+(v===-1?"في البيت":v===57?"وصلت للنهاية":"على المسار "+v)
+  "قطعة "+(i+1)+": "+
+  (v===-1?"في البيت":v===57?"وصلت للنهاية":"على المسار "+v)
  ).join(" | ");
+
  if(gameMode==="online"&&roomPlayers.length){
   const mySeat=onlineSeat();
-  $("gameMessage").textContent=mySeat===turn?"دورك! ارمِ النرد أو حرّك قطعتك.":"انتظر دور اللاعب الآخر.";
+  $("gameMessage").textContent=
+   mySeat===turn?
+   "دورك! ارمِ النرد أو حرّك قطعتك.":
+   "انتظر دور اللاعب الآخر.";
  }
 }
 
 function rollDice(){
  if(waiting||finished)return;
  if(!isMyTurn())return alert("انتظر دورك");
+
  rollValue=Math.floor(Math.random()*6)+1;
  $("dice").textContent=["⚀","⚁","⚂","⚃","⚄","⚅"][rollValue-1];
  waiting=true;
+
  const valid=positions[turn].some((v,i)=>canMove(i));
+
  if(!valid){
   waiting=false;
   $("gameMessage").textContent="ما عندك حركة ممكنة.";
   if(rollValue!==6)turn=(turn+1)%count;
-  draw();saveGameState();return;
+  draw();
+  saveGameState();
+  return;
  }
+
  $("gameMessage").textContent="🎯 اختر القطعة لتحريكها";
- draw();saveGameState();
+ draw();
+ saveGameState();
 }
 
 function movePiece(i){
  if(!waiting||finished)return;
  if(!isMyTurn())return alert("مو دورك");
  if(!canMove(i))return alert("هذه القطعة لا يمكن تحريكها بهذا الرقم");
+
  const old=positions[turn][i];
  const next=old===-1?0:old+rollValue;
  positions[turn][i]=next;
+
  if(next<52){
   const landing=(starts[turn]+next)%52;
+
   if(!safe.includes(landing)){
    positions.forEach((group,p)=>{
     if(p===turn)return;
     group.forEach((v,j)=>{
-     if(v>=0&&v<52&&(starts[p]+v)%52===landing)group[j]=-1;
+     if(v>=0&&v<52&&(starts[p]+v)%52===landing)
+      group[j]=-1;
     });
    });
   }
  }
+
  if(positions[turn].every(v=>v===57)){
-  finished=true;waiting=false;draw();
+  finished=true;
+  waiting=false;
+  draw();
   $("gameMessage").textContent="🏆 فاز اللاعب "+names[turn]+"!";
-  saveGameState();return;
+  saveGameState();
+  return;
  }
+
  waiting=false;
  if(rollValue!==6)turn=(turn+1)%count;
- $("gameMessage").textContent=rollValue===6?"ممتاز! عندك رمية إضافية 🎉":"تم تحريك القطعة";
- draw();saveGameState();
+
+ $("gameMessage").textContent=
+  rollValue===6?
+  "ممتاز! عندك رمية إضافية 🎉":
+  "تم تحريك القطعة";
+
+ draw();
+ saveGameState();
 }
 
-// الدردشة الفورية
 async function sendMessage(){
  if(!currentRoom)return alert("ادخل غرفة أولاً حتى تستخدم الدردشة");
+
  const value=$("chatInput").value.trim();
  if(!value)return;
+
  try{
   const {error}=await db.from("messages").insert({
-   room_id:currentRoom.id,sender_id:account.id,message:value
+   room_id:currentRoom.id,
+   sender_id:account.id,
+   message:value
   });
+
   if(error)throw error;
   $("chatInput").value="";
  }catch(e){notifyError(e)}
@@ -667,20 +860,33 @@ async function sendMessage(){
 
 function appendMessage(m){
  if(!m||!m.message)return;
+
  const b=document.createElement("div");
  b.className="bubble"+(m.sender_id===account.id?" mine":"");
- b.textContent=(m.sender_id===account.id?account.name:"لاعب")+": "+m.message;
+ b.textContent=
+  (m.sender_id===account.id?account.name:"لاعب")+": "+m.message;
+
  $("chatLog").append(b);
  $("chatLog").scrollTop=$("chatLog").scrollHeight;
 }
 
 async function loadMessages(){
  $("chatLog").innerHTML="";
- if(!currentRoom){$("chatLog").textContent="ادخل غرفة للبدء بالدردشة.";return}
+
+ if(!currentRoom){
+  $("chatLog").textContent="ادخل غرفة للبدء بالدردشة.";
+  return;
+ }
+
  try{
-  const {data,error}=await db.from("messages").select("*").eq("room_id",currentRoom.id).order("created_at").limit(100);
+  const {data,error}=await db.from("messages")
+   .select("*")
+   .eq("room_id",currentRoom.id)
+   .order("created_at")
+   .limit(100);
+
   if(error)throw error;
-  data.forEach(appendMessage);
+  (data||[]).forEach(appendMessage);
  }catch(e){console.error(e)}
 }
 

@@ -3,235 +3,194 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>لَمّة PLAY - V12 ستايل يلا 👑</title>
+<title>لَمّة PLAY - V13 Canvas 👑</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:#2a0a5e;color:white;font-family:Arial,sans-serif;background:linear-gradient(180deg,#4a1a9e 0%,#2a0a5e 40%,#1a0533 100%);min-height:100vh}
-button,input{font:inherit}
+body{margin:0;background:#2a0a5e;color:white;font-family:Arial,sans-serif;background:linear-gradient(180deg,#4a1a9e,#1a0533);min-height:100vh}
 button{border:0;border-radius:14px;padding:12px 16px;font-weight:bold;cursor:pointer}
 button:active{transform:scale(.97)}
-.primary{background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;box-shadow:0 4px 15px rgba(255,215,0,.5)}
+.primary{background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000}
 .secondary{background:#3a2a6e;color:white}
 .danger{background:#c0392b;color:white}
-.vip{background:linear-gradient(135deg,#ff00cc,#ff0066);color:white}
-header{background:linear-gradient(90deg,#ffcc00,#ff8c00);color:#000;padding:10px;text-align:center;font-weight:900;font-size:22px;position:sticky;top:0;z-index:20}
+header{background:linear-gradient(90deg,#ffcc00,#ff8c00);color:#000;padding:10px;text-align:center;font-weight:900;font-size:22px}
 header small{display:block;font-size:11px;font-weight:400}
-main{max-width:680px;margin:auto;padding:10px 12px 110px}
-.panel{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:16px;margin-bottom:12px;backdrop-filter:blur(8px)}
+main{max-width:560px;margin:auto;padding:10px 12px 100px}
+.panel{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:16px;margin-bottom:12px}
 .hidden{display:none!important}
-h2{margin:5px 0 12px}
-p{color:#d8ccff;line-height:1.6}
 input{width:100%;padding:14px;border-radius:12px;border:1px solid #6a4ac0;background:#1e0f45;color:white;margin:7px 0;outline:none}
 button.full{width:100%;margin:6px 0}
-.hero{text-align:center;padding:18px 10px}
-.logo{font-size:64px;filter:drop-shadow(0 0 20px gold)}
-.hero h1{color:#ffd700;font-size:30px;margin:6px}
-.profile{display:flex;align-items:center;gap:12px}
-.avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#ff6b00);display:grid;place-items:center;font-size:28px;border:3px solid #ffd700}
-.profile-info{flex:1;text-align:right}
-.profile-info small{display:block;color:#d8ccff;margin-top:3px}
+.hero{text-align:center}
+.logo{font-size:60px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.menu-btn{min-height:100px;background:linear-gradient(145deg,#5a2ea6,#3a1a7a);color:white;border:1px solid #7a5ac0;font-size:15px}
-.menu-btn span{display:block;font-size:30px;margin-bottom:6px}
-.menu-btn small{font-size:11px;color:#ffd700}
-.section-title{color:#ffd700;margin:16px 3px 10px;font-weight:bold}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#1a0533;border-top:1px solid #4a2a8e;display:flex;justify-content:space-around;padding:8px 3px;z-index:10}
-.bottom button{background:transparent;color:#cbb8ff;padding:8px 4px;font-size:11px}
-.bottom button b{display:block;font-size:21px}
-.bottom button.active{color:#ffd700}
-.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1;min-width:0}
-.badge{background:#ffd700;color:#000;padding:5px 10px;border-radius:20px;font-size:12px;font-weight:bold}
-.badge-vip{background:#ff00cc;color:white;padding:5px 10px;border-radius:20px;font-size:12px}
+.menu-btn{min-height:95px;background:#5a2ea6;color:white;border:1px solid #7a5ac0;font-size:15px}
+.menu-btn span{display:block;font-size:28px}
+.row{display:flex;gap:8px}.row>*{flex:1}
 .coins-bar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:10px 0}
 .coin-pill{background:#3a1a7a;border:1px solid #ffd700;padding:8px 13px;border-radius:20px;font-weight:bold;font-size:13px}
-/* ===== ستايل يلا - اللاعبين حول البورد ===== */
-.yalla-table{max-width:520px;margin:10px auto}
-.player-card{display:flex;align-items:center;gap:10px;background:#fff;color:#222;border-radius:14px;padding:8px 12px;box-shadow:0 3px 12px rgba(0,0,0,.3);border:3px solid transparent}
-.player-card.active{border-color:#ffd700;box-shadow:0 0 0 3px #ffd700,0 0 20px rgba(255,215,0,.6)}
-.player-card .p-avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-size:22px;color:white;flex-shrink:0}
-.player-card.red .p-avatar{background:#e74c3c}
-.player-card.green .p-avatar{background:#27ae60}
-.player-card.yellow .p-avatar{background:#f1c40f}
-.player-card.blue .p-avatar{background:#3498db}
-.player-card .p-info{flex:1;text-align:right}
-.player-card .p-info b{font-size:14px}
-.player-card .p-info small{display:block;color:#777;font-size:11px}
-.player-card .p-coins{background:#fff3cd;padding:5px 9px;border-radius:10px;font-size:12px;font-weight:bold}
-.top-players{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
-.bottom-players{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
-/* البورد ستايل يلا */
-#boardWrap{width:min(92vw,500px);aspect-ratio:1/1;margin:0 auto;background:white;border:6px solid #fff;border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.5);position:relative}
-#board{display:grid;grid-template-columns:repeat(15,1fr);grid-template-rows:repeat(15,1fr);width:100%;height:100%}
-.cell{border:1px solid #e8e8e8;background:#f9f9f9;position:relative;min-width:0;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.cell.path{background:#fff}
-.cell.safe{background:#dbeafe!important}
-.cell.safe::after{content:"★";position:absolute;font-size:9px;color:#3b82f6;top:1px;left:2px}
-.cell.home.red{background:#ff6b6b}
-.cell.home.green{background:#51cf66}
-.cell.home.yellow{background:#ffd43b}
-.cell.home.blue{background:#4dabf7}
-.cell.center{background:conic-gradient(#51cf66 0 25%,#ffd43b 0 50%,#4dabf7 0 75%,#ff6b6b 0)}
-/* حجر يلا - 3D */
-.token{width:84%;aspect-ratio:1/1;border-radius:50%;border:2px solid white;box-shadow:0 3px 0 rgba(0,0,0,.3),0 4px 8px rgba(0,0,0,.4),inset 0 -4px 6px rgba(0,0,0,.25),inset 0 3px 4px rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;color:white;font-weight:900;font-size:13px;cursor:pointer;z-index:3;flex-shrink:0;line-height:1;position:relative}
-.token::before{content:"";position:absolute;top:18%;left:22%;width:28%;height:18%;background:rgba(255,255,255,.7);border-radius:50%;transform:rotate(-20deg)}
-.token.red{background:radial-gradient(circle at 35% 30%,#ff8a8a,#e03131)}
-.token.green{background:radial-gradient(circle at 35% 30%,#8ce99a,#2b8a3e)}
-.token.yellow{background:radial-gradient(circle at 35% 30%,#fff176,#e6a800)}
-.token.blue{background:radial-gradient(circle at 35% 30%,#90caf9,#1971c2)}
-.token.selected{outline:3px solid #ffd700;transform:scale(1.18);box-shadow:0 0 0 4px #ffd700,0 0 22px #ffd700;animation:pulse .7s infinite;z-index:10}
-@keyframes pulse{0%,100%{transform:scale(1.1)}50%{transform:scale(1.25)}}
-.token.moving{animation:jump .28s ease}
-@keyframes jump{0%{transform:scale(1)}50%{transform:scale(1.3) translateY(-8px)}100%{transform:scale(1)}}
-/* النرد ستايل يلا */
-.dice-area{text-align:center;margin:10px 0}
-#dice{font-size:64px;display:inline-block;background:white;border-radius:16px;padding:6px 12px;box-shadow:0 5px 15px rgba(0,0,0,.4);line-height:1}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#1a0533;display:flex;justify-content:space-around;padding:8px 3px}
+.bottom button{background:transparent;color:#cbb8ff;font-size:11px}
+.bottom button b{display:block;font-size:20px}
+.bottom button.active{color:#ffd700}
+/* ===== Canvas ===== */
+#canvasWrap{width:min(92vw,500px);aspect-ratio:1/1;margin:10px auto;background:white;border:5px solid #fff;border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+#gameCanvas{width:100%;height:100%;display:block;touch-action:manipulation;cursor:pointer}
+.player-card{display:flex;align-items:center;gap:10px;background:#fff;color:#222;border-radius:14px;padding:8px 12px;margin:6px 0}
+.player-card.active{outline:3px solid #ffd700;box-shadow:0 0 15px #ffd700}
+.player-card .av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:white;font-size:20px}
+.player-card.red .av{background:#e03131}.player-card.green .av{background:#2b8a3e}.player-card.yellow .av{background:#e6a800}.player-card.blue .av{background:#1971c2}
+.player-card .inf{flex:1;text-align:right}.player-card small{display:block;color:#777}
+.dice-box{text-align:center;margin:10px}
+#dice{font-size:62px;background:white;border-radius:16px;padding:4px 12px;display:inline-block;box-shadow:0 5px 15px rgba(0,0,0,.4)}
 #dice.rolling{animation:roll .4s infinite}
 @keyframes roll{0%{transform:rotate(0)}50%{transform:rotate(180deg) scale(1.2)}100%{transform:rotate(360deg)}}
 #status{text-align:center;color:#ffd700;font-weight:bold}
-#gameMessage{text-align:center;min-height:32px;font-weight:bold;color:#fff}
-.list-item{display:flex;align-items:center;gap:10px;padding:12px 3px;border-bottom:1px solid rgba(255,255,255,.15)}
-.list-item .grow{flex:1}.list-item small{display:block;color:#d8ccff;margin-top:4px}
-.chat-log{height:260px;overflow:auto;background:#1e0f45;padding:12px;border-radius:13px;margin:10px 0}
-.bubble{background:#3a2a6e;padding:9px 12px;border-radius:13px;margin:8px 0;max-width:85%;width:fit-content;overflow-wrap:anywhere}
-.bubble.mine{background:#7a5a00;margin-right:auto}
-.note{font-size:12px;color:#d8ccff;line-height:1.7}
-.player-list{display:flex;gap:7px;justify-content:center;flex-wrap:wrap}
-.player-tag{padding:8px 12px;background:#3a2a6e;border-radius:12px;font-size:13px}
-.card-game{text-align:center;padding:20px}
-.big-card{font-size:80px;margin:12px}
-.cards-row{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:12px 0}
-.mini-card{width:52px;height:72px;background:white;color:#000;border-radius:8px;display:grid;place-items:center;font-size:22px;font-weight:bold;cursor:pointer;border:2px solid #ffd700}
-.mini-card.red{color:#d00}
+#gameMessage{text-align:center;font-weight:bold;min-height:30px}
+.note{font-size:12px;color:#d8ccff;line-height:1.6}
 </style>
 </head>
 <body>
-<header>🎲 لَمّة PLAY <span style="background:#000;color:#ffd700;font-size:11px;padding:3px 8px;border-radius:10px">V12 YALLA STYLE</span><small>اللعبة تجمعنا ❤️</small></header>
+<header>🎲 لَمّة PLAY <span style="background:#000;color:#ffd700;font-size:11px;padding:3px 8px;border-radius:10px">V13 CANVAS</span><small>بورد مرسوم - دقة 100% ❤️</small></header>
 <main>
-<section id="login" class="panel"><div class="hero"><div class="logo">🎲👑</div><h1>أهلاً بك في لَمّة PLAY</h1><p>ستايل جديد مثل يلا لودو - جربه هسه!</p><div class="coins-bar"><span class="coin-pill">💰 1000 هدية</span></div></div><input id="loginName" maxlength="18" placeholder="اسم اللاعب"><input id="loginEmail" type="email" placeholder="البريد الإلكتروني"><input id="loginPassword" type="password" placeholder="كلمة المرور"><button class="primary full" onclick="register()">إنشاء حساب جديد + 1000 💰</button><button class="secondary full" onclick="login()">تسجيل الدخول</button></section>
-<section id="homePage" class="hidden">
-<div class="panel profile"><div class="avatar" id="homeAvatar">👤</div><div class="profile-info"><strong id="homeName">لاعب</strong><small id="homeID">ID: ---</small><small id="homeLevel">⭐ المستوى 1</small></div><span class="badge" id="homeVip">مجاني</span></div>
-<div class="coins-bar"><span class="coin-pill">💰 <span id="coinsDisplay">0</span></span><span class="coin-pill">⭐ <span id="xpDisplay">0</span></span><span class="coin-pill">🏆 <span id="winsDisplay">0</span></span><span class="coin-pill">🔥 <span id="streakDisplay">0</span></span></div>
-<div class="panel hero"><div class="logo">🎲</div><h1>اللعبة تجمعنا</h1><button class="primary full" onclick="showPage('playPage')">ابدأ اللعب الآن 🔥</button><button class="vip full" onclick="claimDaily()">🎁 هديتك اليومية +100 💰</button></div>
-<div class="section-title">🎮 الالعاب</div>
+<section id="homePage">
+<div class="coins-bar"><span class="coin-pill">💰 <span id="coinsDisplay">1000</span></span><span class="coin-pill">🏆 <span id="winsDisplay">0</span> فوز</span><span class="coin-pill">🔥 <span id="streakDisplay">0</span></span></div>
+<div class="panel hero"><div class="logo">🎲</div><h2>اللعبة تجمعنا</h2><button class="primary full" onclick="showGame()">ابدأ اللعب الآن 🔥</button></div>
 <div class="grid">
-<button class="menu-btn" onclick="showPage('playPage')"><span>🎲</span>لودو<br><small>ستايل يلا 🔥</small></button>
-<button class="menu-btn" onclick="showPage('tarneebPage')"><span>🃏</span>طرنيب</button>
-<button class="menu-btn" onclick="showPage('jakarooPage')"><span>🃏</span>جكارو</button>
-<button class="menu-btn" onclick="showPage('dominoPage')"><span>🎴</span>دومنة</button>
-<button class="menu-btn" onclick="showPage('friendsPage')"><span>👥</span>الأصدقاء</button>
-<button class="menu-btn" onclick="showPage('roomsPage')"><span>🏠</span>غرف اللعب</button>
-<button class="menu-btn" onclick="showPage('chatPage')"><span>💬</span>المحادثات</button>
-<button class="menu-btn" onclick="showPage('shopPage')"><span>🛒</span>المتجر VIP</button>
-<button class="menu-btn" onclick="showPage('giftsPage')"><span>🎁</span>الهدايا</button>
-<button class="menu-btn" onclick="showPage('profilePage')"><span>👤</span>حسابي</button>
+<button class="menu-btn" onclick="startGame(2)"><span>🎲</span>لودو 2 لاعب</button>
+<button class="menu-btn" onclick="startGame(4)"><span>🎲</span>لودو 4 لاعب</button>
+<button class="menu-btn" onclick="startGame(2)"><span>🃏</span>طرنيب</button>
+<button class="menu-btn" onclick="alert('قريبا')"><span>🛒</span>المتجر</button>
 </div>
 </section>
-<section id="playPage" class="hidden"><div class="panel"><h2>🎲 اللعب - ستايل يلا</h2><p>البورد الجديد، اللاعبين حول البورد، والنرد بالنص مثل يلا.</p><button class="primary full" onclick="showPage('roomsPage')">إنشاء غرفة أو الانضمام</button><button class="secondary full" onclick="startGame(2)">تجربة محلية للاعبين</button><button class="secondary full" onclick="startGame(4)">تجربة محلية لأربعة لاعبين</button><button class="secondary full" onclick="showPage('homePage')">رجوع</button></div></section>
-<section id="tarneebPage" class="hidden"><div class="panel"><h2>🃏 طرنيب</h2><div class="row"><span class="coin-pill">انت: <span id="tarneebYou">0</span></span><span class="coin-pill">الخصم: <span id="tarneebOpp">0</span></span><span class="coin-pill">الجولة: <span id="tarneebRound">1</span>/5</span></div><div style="text-align:center">ورق الطاولة:<div id="tableCards" class="cards-row"></div></div><div id="myTarneebCards" class="cards-row"></div><div id="tarneebMsg" class="note" style="text-align:center">اضغط بدء اللعبة</div><button class="primary full" onclick="startTarneeb()">ابدأ طرنيب 🔥</button><button class="secondary full" onclick="showPage('homePage')">رجوع</button></div></section>
-<section id="jakarooPage" class="hidden"><div class="panel card-game"><h2>🃏 جكارو</h2><div class="big-card" id="jakarooCard">🂠</div><div id="jakarooText" class="note">اضغط اسحب ورقة</div><button class="primary full" onclick="drawJakaroo()">اسحب ورقة</button><button class="secondary full" onclick="showPage('homePage')">رجوع</button></div></section>
-<section id="dominoPage" class="hidden"><div class="panel card-game"><h2>🎴 دومنة</h2><div class="big-card" id="dominoTile">🎴</div><div id="dominoText" class="note">اضغط اسحب حجر</div><button class="primary full" onclick="drawDomino()">اسحب حجر</button><button class="secondary full" onclick="showPage('homePage')">رجوع</button></div></section>
-<section id="roomsPage" class="hidden"><div class="panel"><h2>🏠 غرف اللعب</h2><input id="roomName" maxlength="25" placeholder="اسم الغرفة"><div class="row"><button class="primary" onclick="createRoom(2)">غرفة لاعبين</button><button class="primary" onclick="createRoom(4)">غرفة أربعة</button></div><hr><input id="joinCode" maxlength="8" placeholder="أدخل رمز الغرفة"><button class="primary full" onclick="joinRoom()">انضمام</button><button class="secondary full" onclick="renderRooms()">تحديث الغرف</button><div id="roomsList"></div></div><button class="secondary full" onclick="showPage('homePage')">رجوع</button></section>
-<!-- ===== صفحة اللعب ستايل يلا ===== -->
 <section id="gamePage" class="hidden">
-<div class="yalla-table">
-<div class="top-players">
-<div class="player-card green" id="card1"><div class="p-avatar">🟢</div><div class="p-info"><b>اللاعب الأخضر</b><small>في الانتظار</small></div><div class="p-coins">💰 1000</div></div>
-<div class="player-card yellow" id="card2"><div class="p-avatar">🟡</div><div class="p-info"><b>اللاعب الأصفر</b><small>في الانتظار</small></div><div class="p-coins">💰 1000</div></div>
-</div>
-<div id="boardWrap"><div id="board"></div></div>
-<div class="bottom-players">
-<div class="player-card red" id="card0"><div class="p-avatar">🔴</div><div class="p-info"><b>انت - الأحمر</b><small id="card0Status">دورك!</small></div><div class="p-coins">💰 <span id="card0Coins">1000</span></div></div>
-<div class="player-card blue" id="card3"><div class="p-avatar">🔵</div><div class="p-info"><b>اللاعب الأزرق</b><small>في الانتظار</small></div><div class="p-coins">💰 1000</div></div>
-</div>
-</div>
+<div class="player-card green" id="card1"><div class="av">🟢</div><div class="inf"><b>اللاعب الأخضر</b><small>في الانتظار</small></div><div>💰 1000</div></div>
+<div class="player-card yellow" id="card2"><div class="av">🟡</div><div class="inf"><b>اللاعب الأصفر</b><small>في الانتظار</small></div><div>💰 1000</div></div>
+<div id="canvasWrap"><canvas id="gameCanvas" width="600" height="600"></canvas></div>
+<div class="player-card red" id="card0"><div class="av">🔴</div><div class="inf"><b>انت - الأحمر</b><small id="card0Status">دورك!</small></div><div>💰 <span id="card0Coins">1000</span></div></div>
+<div class="player-card blue" id="card3"><div class="av">🔵</div><div class="inf"><b>اللاعب الأزرق</b><small>في الانتظار</small></div><div>💰 1000</div></div>
 <div class="panel" style="text-align:center">
-<div id="roomInfo" class="note"></div>
 <div id="status">دور اللاعب الأحمر</div>
-<div class="dice-area"><div id="dice">🎲</div></div>
-<div class="row"><button class="primary" id="rollBtn" onclick="rollDice()">ارمِ النرد 🎲</button><button class="secondary" onclick="newGame()">إعادة</button><button class="secondary" onclick="leaveRoom()">خروج</button></div>
-<p id="gameMessage" class="note">ارمِ النرد للبدء.</p>
-<p class="note">💡 القطعة الذهبية تلمع - اضغط عليها</p>
+<div class="dice-box"><div id="dice">🎲</div></div>
+<div class="row"><button class="primary" id="rollBtn" onclick="rollDice()">ارمِ النرد 🎲</button><button class="secondary" onclick="startGame(count)">إعادة</button><button class="secondary" onclick="showHome()">خروج</button></div>
+<p id="gameMessage">ارمِ النرد للبدء - اضغط على القطعة الذهبية</p>
+<p class="note">البورد هسه Canvas - مستحيل يتمدد</p>
 </div>
-<div class="panel"><strong>قطع اللاعب الحالي</strong><div id="piecesInfo" class="note">ارمِ النرد أولاً</div></div>
 </section>
-<section id="friendsPage" class="hidden"><div class="panel"><h2>👥 الأصدقاء</h2><input id="friendID" placeholder="أدخل معرّف اللاعب ID"><button class="primary full" onclick="addFriend()">إضافة صديق</button><div id="friendsList"></div></div><button class="secondary full" onclick="showPage('homePage')">رجوع</button></section>
-<section id="chatPage" class="hidden"><div class="panel"><h2>💬 دردشة الغرفة</h2><div class="chat-log" id="chatLog"></div><div class="row"><input id="chatInput" placeholder="اكتب رسالة..." maxlength="300"><button class="primary" onclick="sendMessage()">إرسال</button></div></div><button class="secondary full" onclick="showPage('homePage')">رجوع</button></section>
-<section id="giftsPage" class="hidden"><div class="panel"><h2>🎁 الهدايا</h2><div class="grid"><button class="menu-btn" onclick="gift('وردة 🌹',50)"><span>🌹</span>وردة<br><small>50 💰</small></button><button class="menu-btn" onclick="gift('قلب ❤️',100)"><span>❤️</span>قلب<br><small>100 💰</small></button><button class="menu-btn" onclick="gift('نجمة ⭐',150)"><span>⭐</span>نجمة<br><small>150 💰</small></button><button class="menu-btn" onclick="gift('تاج 👑',500)"><span>👑</span>تاج<br><small>500 💰</small></button></div></div><button class="secondary full" onclick="showPage('homePage')">رجوع</button></section>
-<section id="shopPage" class="hidden"><div class="panel"><h2>🛒 متجر VIP</h2><p>رصيدك: <b id="shopCoins">0</b> 💰</p><div class="list-item"><span class="grow">👑 تاج ملكي - 500 💰</span><button class="primary" onclick="buyItem('crown',500,'👑')">شراء</button></div><div class="list-item"><span class="grow">💎 VIP اسبوع - 1000 💰</span><button class="vip" onclick="buyItem('vip',1000,'💎')">شراء</button></div><div class="list-item"><span class="grow">💰 5000 كوينز مجانا</span><button class="primary" onclick="addCoins(5000)">اخذ</button></div></div><button class="secondary full" onclick="showPage('homePage')">رجوع</button></section>
-<section id="profilePage" class="hidden"><div class="panel"><h2>👤 حسابي</h2><div class="profile"><div class="avatar" id="profileAvatar">👤</div><div class="profile-info"><strong id="profileName"></strong><small id="profileID"></small><small id="profileStats"></small></div></div><input id="newName" maxlength="18" placeholder="تغيير الاسم"><button class="primary full" onclick="changeName()">حفظ الاسم</button><button class="secondary full" onclick="copyID()">نسخ ID</button><button class="danger full" onclick="logout()">تسجيل الخروج</button></div><button class="secondary full" onclick="showPage('homePage')">رجوع</button></section>
 </main>
-<nav class="bottom hidden" id="bottomNav"><button class="active" onclick="showPage('homePage',this)"><b>⌂</b>الرئيسية</button><button onclick="showPage('playPage',this)"><b>🎲</b>اللعب</button><button onclick="showPage('tarneebPage',this)"><b>🃏</b>طرنيب</button><button onclick="showPage('chatPage',this)"><b>💬</b>الدردشة</button><button onclick="showPage('profilePage',this)"><b>👤</b>حسابي</button></nav>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<nav class="bottom"><button class="active" onclick="showHome()">⌂ الرئيسية</button><button onclick="showGame()">🎲 اللعب</button><button onclick="alert('طرنيب قريبا')">🃏 طرنيب</button><button onclick="alert('حسابي')">👤 حسابي</button></nav>
 <script>
-const SUPABASE_URL="https://gjamnwkwnjdllsewzapg.supabase.co";
-const SUPABASE_KEY="sb_publishable_u9qbzgIafeo4ZFFqCcXqhg_THl4MNha";
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const $=id=>document.getElementById(id);
-let account=null,currentRoom=null,roomChannel=null;
-let localFriends=JSON.parse(localStorage.getItem("lama_friends")||"[]");
-let coins=parseInt(localStorage.getItem("lama_coins")||"1000"),xp=parseInt(localStorage.getItem("lama_xp")||"0"),wins=parseInt(localStorage.getItem("lama_wins")||"0"),streak=parseInt(localStorage.getItem("lama_streak")||"0");
-let myItems=JSON.parse(localStorage.getItem("lama_items")||"[]"),isVip=localStorage.getItem("lama_vip")==="1",myAvatar=localStorage.getItem("lama_avatar")||"👤";
-let count=2,turn=0,positions=[],rollValue=0,waiting=false,finished=false,animating=false,gameMode="local",roomPlayers=[],syncing=false,namesMap={};
-let tarneebHand=[],tarneebYouScore=0,tarneebOppScore=0,tarneebRound=1;
-const suits=["♠","♥","♦","♣"],ranks=["7","8","9","10","J","Q","K","A"];
-const names=["الأحمر","الأخضر","الأصفر","الأزرق"],colors=["red","green","yellow","blue"],symbols=["🔴","🟢","🟡","🔵"],starts=[0,13,26,39],safe=[0,8,13,21,26,34,39,47];
+let coins=parseInt(localStorage.getItem("lama_coins")||"1000"),wins=parseInt(localStorage.getItem("lama_wins")||"0"),streak=parseInt(localStorage.getItem("lama_streak")||"0");
+let count=2,turn=0,positions=[],rollValue=0,waiting=false,finished=false,animating=false;
+const names=["الأحمر","الأخضر","الأصفر","الأزرق"],starts=[0,13,26,39],safe=[0,8,13,21,26,34,39,47];
 const route=[[6,1],[6,2],[6,3],[6,4],[6,5],[5,6],[4,6],[3,6],[2,6],[1,6],[0,6],[0,7],[0,8],[1,8],[2,8],[3,8],[4,8],[5,8],[6,9],[6,10],[6,11],[6,12],[6,13],[6,14],[7,14],[8,14],[8,13],[8,12],[8,11],[8,10],[8,9],[9,8],[10,8],[11,8],[12,8],[13,8],[14,8],[14,7],[14,6],[13,6],[12,6],[11,6],[10,6],[9,6],[8,5],[8,4],[8,3],[8,2],[8,1],[8,0],[7,0],[6,0]];
 const homes=[[[1,1],[1,4],[4,1],[4,4]],[[1,10],[1,13],[4,10],[4,13]],[[10,10],[10,13],[13,10],[13,13]],[[10,1],[10,4],[13,1],[13,4]]];
 const endPaths=[[[7,1],[7,2],[7,3],[7,4],[7,5],[7,6]],[[1,7],[2,7],[3,7],[4,7],[5,7],[6,7]],[[7,13],[7,12],[7,11],[7,10],[7,9],[7,8]],[[13,7],[12,7],[11,7],[10,7],[9,7],[8,7]]];
-function saveProgress(){localStorage.setItem("lama_coins",coins);localStorage.setItem("lama_xp",xp);localStorage.setItem("lama_wins",wins);localStorage.setItem("lama_streak",streak);localStorage.setItem("lama_items",JSON.stringify(myItems));updateCoinsUI();}
-function addCoins(n){coins+=n;saveProgress();alert("🎉 ربحت "+n+" 💰!");}
-function updateCoinsUI(){if($("coinsDisplay"))$("coinsDisplay").textContent=coins;if($("xpDisplay"))$("xpDisplay").textContent=xp;if($("winsDisplay"))$("winsDisplay").textContent=wins;if($("streakDisplay"))$("streakDisplay").textContent=streak;if($("shopCoins"))$("shopCoins").textContent=coins;if($("card0Coins"))$("card0Coins").textContent=coins;let lvl=1,title="مبتدئ";if(xp>=500){lvl=5;title="اسطورة 👑";}else if(xp>=200){lvl=4;title="محترف 🔥";}else if(xp>=100){lvl=3;title="لاعب قوي 💪";}else if(xp>=30){lvl=2;title="صاعد ⭐";}if($("homeLevel"))$("homeLevel").textContent="⭐ المستوى "+lvl+" - "+title;if($("profileStats"))$("profileStats").textContent="💰 "+coins+" | ⭐ "+xp+" | 🏆 "+wins+" | 🔥 "+streak;if($("homeVip")){$("homeVip").textContent=isVip?"VIP 💎":"مجاني";$("homeVip").className=isVip?"badge-vip":"badge";}if($("homeAvatar"))$("homeAvatar").textContent=myAvatar;if($("profileAvatar"))$("profileAvatar").textContent=myAvatar;}
-function claimDaily(){let last=localStorage.getItem("lama_daily");let today=new Date().toDateString();if(last===today)return alert("اخذت هديتك اليوم!");localStorage.setItem("lama_daily",today);addCoins(isVip?200:100);}
-function buyItem(id,price,emoji){if(myItems.includes(id))return alert("عندك هذا الشي!");if(coins<price)return alert("كوينزك ما تكفي!");coins-=price;myItems.push(id);if(id==="vip")isVip=true,localStorage.setItem("lama_vip","1");saveProgress();alert("تم الشراء! "+emoji);}
-function drawJakaroo(){const cards=["🂡","🂢","🂣","🂤","🂥","🂦","🂧","🂨","🂩","🂪","🂫","🂭","🂮","🃏"];const c=cards[Math.floor(Math.random()*cards.length)];$("jakarooCard").textContent=c;let win=Math.floor(Math.random()*100)+10;if(c==="🃏")win=500;addCoins(win);}
-function drawDomino(){const d=["⚀","⚁","⚂","⚃","⚄","⚅"];let a=d[Math.floor(Math.random()*6)],b=d[Math.floor(Math.random()*6)];$("dominoTile").textContent=a+" | "+b;addCoins(20+Math.floor(Math.random()*80));}
-function cardVal(c){return ranks.indexOf(c.slice(1));}
-function startTarneeb(){tarneebYouScore=0;tarneebOppScore=0;tarneebRound=1;dealTarneeb();}
-function dealTarneeb(){let deck=[];suits.forEach(s=>ranks.forEach(r=>deck.push(r+s)));deck=deck.sort(()=>Math.random()-.5);tarneebHand=deck.slice(0,8);$("tarneebRound").textContent=tarneebRound;$("tarneebYou").textContent=tarneebYouScore;$("tarneebOpp").textContent=tarneebOppScore;$("tableCards").innerHTML="";$("tarneebMsg").textContent="اختار ورقة";renderTarneebHand();}
-function renderTarneebHand(){$("myTarneebCards").innerHTML="";tarneebHand.forEach((c,i)=>{let d=document.createElement("div");d.className="mini-card"+((c.includes("♥")||c.includes("♦"))?" red":"");d.textContent=c;d.onclick=()=>playTarneeb(i);$("myTarneebCards").append(d);});}
-function playTarneeb(idx){let myCard=tarneebHand.splice(idx,1)[0];let opp=[];for(let k=0;k<3;k++){let r=ranks[Math.floor(Math.random()*ranks.length)],s=suits[Math.floor(Math.random()*suits.length)];opp.push(r+s);}let all=[myCard,...opp];$("tableCards").innerHTML=all.map(c=>`<div class="mini-card ${c.includes("♥")||c.includes("♦")?"red":""}">${c}</div>`).join("");if(cardVal(myCard)>Math.max(...opp.map(cardVal))){tarneebYouScore++;$("tarneebMsg").textContent="🔥 فزت بالجولة! "+myCard;coins+=50;saveProgress();}else{tarneebOppScore++;$("tarneebMsg").textContent="الخصم فاز.";}if(tarneebHand.length===0){if(tarneebRound>=5){let msg=tarneebYouScore>tarneebOppScore?`🏆 فزت ${tarneebYouScore}-${tarneebOppScore}! +1000 💰`:`خسرت ${tarneebYouScore}-${tarneebOppScore}`;if(tarneebYouScore>tarneebOppScore){coins+=1000;wins++;streak++;xp+=100;saveProgress();}else{streak=0;saveProgress();}$("tarneebMsg").textContent=msg;alert(msg);return;}tarneebRound++;setTimeout(dealTarneeb,1200);return;}renderTarneebHand();$("tarneebYou").textContent=tarneebYouScore;$("tarneebOpp").textContent=tarneebOppScore;}
-function showPage(id,btn){document.querySelectorAll("main>section").forEach(x=>x.classList.add("hidden"));$(id).classList.remove("hidden");document.querySelectorAll(".bottom button").forEach(x=>x.classList.remove("active"));if(btn)btn.classList.add("active");if(id==="roomsPage")renderRooms();if(id==="friendsPage")renderFriends();if(id==="profilePage")updateProfile();if(id==="chatPage")loadMessages();updateCoinsUI();}
-function notifyError(e){console.error(e);alert(e?.message||"حدث خطأ.");}
-async function register(){const name=$("loginName").value.trim();const email=$("loginEmail").value.trim();const password=$("loginPassword").value;if(!name||!email||password.length<6)return alert("أدخل الاسم والبريد وكلمة مرور من 6 أحرف");try{const{data,error}=await db.auth.signUp({email,password,options:{data:{username:name}}});if(error)throw error;if(!data.session){alert("تم إنشاء الحساب. أكد بريدك ثم سجل دخول.");return;}await finishLogin(data.user,name);}catch(e){notifyError(e)}}
-async function login(){const email=$("loginEmail").value.trim();const password=$("loginPassword").value;if(!email||!password)return alert("أدخل البريد وكلمة المرور");try{const{data,error}=await db.auth.signInWithPassword({email,password});if(error)throw error;await finishLogin(data.user);}catch(e){notifyError(e)}}
-async function finishLogin(user,newName){const{data:existing}=await db.from("profiles").select("*").eq("id",user.id).maybeSingle();if(existing){account={id:user.id,name:existing.username,playerID:existing.player_id};}else{const name=newName||user.user_metadata?.username||"لاعب";await db.from("profiles").upsert({id:user.id,username:name},{onConflict:"id"});const{data:profile}=await db.from("profiles").select("*").eq("id",user.id).single();account={id:user.id,name:profile.username,playerID:profile.player_id};}namesMap[account.id]=account.name;updateProfile();$("login").classList.add("hidden");$("bottomNav").classList.remove("hidden");showPage("homePage");updateCoinsUI();}
-async function init(){updateCoinsUI();try{const{data:{session}}=await db.auth.getSession();if(session)await finishLogin(session.user);else{$("login").classList.remove("hidden");$("bottomNav").classList.add("hidden");}}catch(e){$("login").classList.remove("hidden");}}
-function updateProfile(){if(!account)return;$("homeName").textContent=account.name;$("homeID").textContent="ID: "+account.playerID;$("profileName").textContent=account.name;$("profileID").textContent="معرّفك: "+account.playerID;updateCoinsUI();}
-async function changeName(){const n=$("newName").value.trim();if(!n)return alert("اكتب الاسم الجديد");try{const{error}=await db.from("profiles").update({username:n}).eq("id",account.id);if(error)throw error;account.name=n;updateProfile();alert("تم حفظ الاسم");}catch(e){notifyError(e)}}
-async function copyID(){if(!account)return;try{await navigator.clipboard.writeText(account.playerID);alert("تم نسخ ID");}catch(e){alert("معرّفك: "+account.playerID)}}
-async function leaveRoom(){if(currentRoom&&account){try{await db.from("room_players").delete().eq("room_id",currentRoom.id).eq("user_id",account.id);}catch(e){}}if(roomChannel){await db.removeChannel(roomChannel);roomChannel=null;}currentRoom=null;roomPlayers=[];gameMode="local";showPage("homePage");}
-async function logout(){if(!confirm("تريد تسجيل الخروج؟"))return;if(currentRoom&&account){await db.from("room_players").delete().eq("room_id",currentRoom.id).eq("user_id",account.id);}if(roomChannel)await db.removeChannel(roomChannel);await db.auth.signOut();location.reload();}
-function saveFriends(){localStorage.setItem("lama_friends",JSON.stringify(localFriends));}
-async function addFriend(){const id=$("friendID").value.trim().toUpperCase();if(!id)return alert("أدخل معرّف اللاعب");if(id===account.playerID)return alert("هذا معرّف حسابك");try{const{data,error}=await db.from("profiles").select("player_id,username").eq("player_id",id).maybeSingle();if(error)throw error;if(!data)return alert("لم نجد لاعباً");if(localFriends.some(x=>x.player_id===id))return alert("الصديق موجود");localFriends.push(data);saveFriends();$("friendID").value="";renderFriends();}catch(e){notifyError(e)}}
-function renderFriends(){const box=$("friendsList");box.innerHTML="";if(!localFriends.length){box.textContent="أضف صديقاً باستخدام معرّفه.";return}localFriends.forEach(f=>{const d=document.createElement("div");d.className="list-item";const s=document.createElement("span");s.className="grow";s.textContent=f.username+" · "+f.player_id;const b=document.createElement("button");b.className="danger";b.textContent="حذف";b.onclick=()=>{localFriends=localFriends.filter(x=>x.player_id!==f.player_id);saveFriends();renderFriends();};d.append(s,b);box.append(d);});}
-function makeCode(){return Math.random().toString(36).substring(2,8).toUpperCase();}
-async function createRoom(n){if(!account)return alert("سجّل الدخول أولاً");try{const code=makeCode();const{data:room,[STRIPPED] db.from("rooms").insert({room_code:code,owner_id:account.id,max_players:n,status:"waiting"}).select().single();if(error)throw error;const{error:joinError}=await db.from("room_players").insert({room_id:room.id,user_id:account.id,seat:1});if(joinError){await db.from("rooms").delete().eq("id",room.id);throw joinError;}$("roomName").value="";alert("تم إنشاء الغرفة. رمزها: "+code);await enterRoom(room);}catch(e){notifyError(e)}}
-async function joinRoom(){if(!account)return alert("سجّل الدخول أولاً");const code=$("joinCode").value.trim().toUpperCase();if(!code)return alert("اكتب رمز الغرفة");try{const{data:room,[STRIPPED] db.from("rooms").select("*").eq("room_code",code).eq("status","waiting").maybeSingle();if(error)throw error;if(!room)return alert("الغرفة غير موجودة");const{data:members}=await db.from("room_players").select("user_id,seat").eq("room_id",room.id);if(members.some(x=>x.user_id===account.id)){await enterRoom(room);return;}if(members.length>=room.max_players)return alert("الغرفة ممتلئة");const used=members.map(x=>x.seat);const seat=[1,2,3,4].find(x=>!used.includes(x));await db.from("room_players").insert({room_id:room.id,user_id:account.id,seat});$("joinCode").value="";await enterRoom(room);}catch(e){notifyError(e)}}
-async function renderRooms(){const box=$("roomsList");box.innerHTML="<p>جاري تحميل الغرف...</p>";try{const{data}=await db.from("rooms").select("*").eq("status","waiting").order("created_at",{ascending:false}).limit(20);box.innerHTML="";if(!data.length){box.innerHTML="<p>لا توجد غرف حالياً.</p>";return}data.forEach(r=>{const d=document.createElement("div");d.className="list-item";const s=document.createElement("span");s.className="grow";s.textContent=r.room_code+" · "+(r.max_players===2?"لاعبين":"أربعة");const b=document.createElement("button");b.className="primary";b.textContent="انضمام";b.onclick=()=>{$("joinCode").value=r.room_code;joinRoom()};d.append(s,b);box.append(d);});}catch(e){box.innerHTML="<p>تعذر تحميل الغرف</p>"}}
-async function enterRoom(room){if(!account)return alert("سجّل الدخول أولاً");currentRoom=room;gameMode="online";try{const{data:members}=await db.from("room_players").select("user_id,seat").eq("room_id",room.id).order("seat");roomPlayers=members||[];count=Number(room.max_players)||2;$("roomInfo").textContent="رمز الغرفة: "+room.room_code+" · "+roomPlayers.length+"/"+count;resetGameState();showPage("gamePage");try{const{data:state}=await db.from("game_states").select("*").eq("room_id",room.id).maybeSingle();if(state?.game_data)applyGameState(state.game_data);else if(roomPlayers[0]?.user_id===account.id)await saveGameState();}catch(e){}await subscribeRoom();await loadMessages();await loadNames();}catch(e){alert("تعذر الدخول: "+e.message)}}
-async function loadNames(){try{const ids=roomPlayers.map(x=>x.user_id);if(!ids.length)return;const{data}=await db.from("profiles").select("id,username").in("id",ids);(data||[]).forEach(p=>namesMap[p.id]=p.username);}catch(e){}}
-async function subscribeRoom(){if(!currentRoom)return;if(roomChannel){await db.removeChannel(roomChannel);roomChannel=null;}roomChannel=db.channel("room-"+currentRoom.id).on("postgres_changes",{event:"*",schema:"public",table:"game_states",filter:"room_id=eq."+currentRoom.id},p=>{if(p.new?.game_data && !animating)applyGameState(p.new.game_data);}).on("postgres_changes",{event:"*",schema:"public",table:"room_players",filter:"room_id=eq."+currentRoom.id},async()=>{const{data}=await db.from("room_players").select("user_id,seat").eq("room_id",currentRoom.id).order("seat");roomPlayers=data||[];$("roomInfo").textContent="رمز الغرفة: "+currentRoom.room_code+" · "+roomPlayers.length+"/"+count;await loadNames();draw();}).on("postgres_changes",{event:"INSERT",schema:"public",table:"messages",filter:"room_id=eq."+currentRoom.id},p=>{appendMessage(p.new);}).subscribe();}
-function onlineSeat(){return roomPlayers.findIndex(x=>x.user_id===account.id);}
-function isMyTurn(){if(gameMode!=="online")return true;return roomPlayers[turn]?.user_id===account.id;}
-function nextTurn(){if(gameMode!=="online"){turn=(turn+1)%count;return;}let t=0;do{turn=(turn+1)%count;t++;}while(t<=count && !roomPlayers[turn]);}
-async function saveGameState(){if(gameMode!=="online"||!currentRoom||syncing)return;const state={count,turn,positions,rollValue,waiting,finished};await db.from("game_states").upsert({room_id:currentRoom.id,game_data:state,updated_at:new Date().toISOString()},{onConflict:"room_id"});}
-function applyGameState(s){if(!s||!Array.isArray(s.positions))return;syncing=true;count=s.count;turn=s.turn;positions=s.positions;rollValue=s.rollValue;waiting=s.waiting;finished=s.finished;$("dice").textContent=rollValue?["⚀","⚁","⚂","⚃","⚄","⚅"][rollValue-1]:"🎲";draw();syncing=false;}
-function resetGameState(){turn=0;rollValue=0;waiting=false;finished=false;animating=false;positions=Array.from({length:count},()=>[-1,-1,-1,-1]);$("dice").textContent="🎲";$("gameMessage").textContent="ارمِ النرد للبدء";draw();}
-function startGame(n){gameMode="local";currentRoom=null;count=n;resetGameState();showPage("gamePage");}
-function newGame(){if(gameMode==="online"&&!isMyTurn())return alert("فقط صاحب الدور");resetGameState();saveGameState();}
-function getPoint(p,pos,i){if(pos===-1)return homes[p][i||0];if(pos===57)return [7,7];if(pos>=52)return endPaths[p][Math.min(pos-52,5)];return route[(starts[p]+pos)%52];}
-function canMove(i){const v=positions[turn][i];if(v===-1)return rollValue===6;return v>=0&&v<57&&v+rollValue<=57;}
-function vibrate(ms){try{if(navigator.vibrate)navigator.vibrate(ms);}catch(e){}}
-function playStepSound(){try{let ctx=new (window.AudioContext||window.webkitAudioContext)();let o=ctx.createOscillator();o.frequency.value=500+Math.random()*200;o.type="sine";let g=ctx.createGain();g.gain.value=0.08;o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+0.07);}catch(e){}}
-function draw(){
-  const board=$("board");board.innerHTML="";
+const tokenColors=["#e03131","#2b8a3e","#e6a800","#1971c2"];
+const homeColors=["#ff6b6b","#51cf66","#ffd43b","#4dabf7"];
+const canvas=$("gameCanvas"),ctx=canvas.getContext("2d");
+function getPoint(p,pos,i){if(pos===-1)return homes[p][i];if(pos===57)return [7,7];if(pos>=52)return endPaths[p][pos-52];return route[(starts[p]+pos)%52];}
+function canMove(i){let v=positions[turn][i];if(v===-1)return rollValue===6;return v>=0&&v<57&&v+rollValue<=57;}
+function drawBoard(){
+  let S=600,cell=S/15;
+  ctx.clearRect(0,0,S,S);
+  ctx.fillStyle="white";ctx.fillRect(0,0,S,S);
+  // الخلايا
   for(let r=0;r<15;r++)for(let c=0;c<15;c++){
-    const el=document.createElement("div");el.className="cell";
-    if(r<6&&c<6)el.classList.add("home","red");
-    else if(r<6&&c>8)el.classList.add("home","green");
-    else if(r>8&&c>8)el.classList.add("home","yellow");
-    else if(r>8&&c<6)el.classList.add("home","blue");
-    const ri=route.findIndex(p=>p[0]===r&&p[1]===c);
-    if(ri>=0){el.className="cell path";if(safe.includes(ri))el.classList.add("safe");}
-    if(r>=6&&r<=8&&c>=6&&c<=8)el.className="cell center";
-    el.dataset.r=r;el.dataset.c=c;board.append(el);
+    let x=c*cell,y=r*cell;
+    // البيوت
+    if(r<6&&c<6){ctx.fillStyle=homeColors[0];ctx.fillRect(x,y,cell,cell);}
+    else if(r<6&&c>8){ctx.fillStyle=homeColors[1];ctx.fillRect(x,y,cell,cell);}
+    else if(r>8&&c>8){ctx.fillStyle=homeColors[2];ctx.fillRect(x,y,cell,cell);}
+    else if(r>8&&c<6){ctx.fillStyle=homeColors[3];ctx.fillRect(x,y,cell,cell);}
+    else{ctx.fillStyle="#fff";ctx.fillRect(x,y,cell,cell);}
+    ctx.strokeStyle="#ddd";ctx.lineWidth=1;ctx.strokeRect(x,y,cell,cell);
+  }
+  // المسار الملون
+  // احمر - طريق النهاية
+  for(let i=0;i<6;i++){ctx.fillStyle=homeColors[0];ctx.fillRect((i+1)*cell,7*cell,cell,cell);ctx.strokeRect((i+1)*cell,7*cell,cell,cell);}
+  for(let i=0;i<6;i++){ctx.fillStyle=homeColors[1];ctx.fillRect(7*cell,(i+1)*cell,cell,cell);ctx.strokeRect(7*cell,(i+1)*cell,cell,cell);}
+  for(let i=0;i<6;i++){ctx.fillStyle=homeColors[2];ctx.fillRect((13-i)*cell,7*cell,cell,cell);ctx.strokeRect((13-i)*cell,7*cell,cell,cell);}
+  for(let i=0;i<6;i++){ctx.fillStyle=homeColors[3];ctx.fillRect(7*cell,(13-i)*cell,cell,cell);ctx.strokeRect(7*cell,(13-i)*cell,cell,cell);}
+  // الامان - نجوم
+  ctx.fillStyle="#3b82f6";ctx.font="bold 14px Arial";ctx.textAlign="center";ctx.textBaseline="middle";
+  safe.forEach(idx=>{let p=route[idx];ctx.fillText("★",(p[1]+0.5)*cell,(p[0]+0.5)*cell);});
+  // الوسط - مثلثات
+  ctx.fillStyle=homeColors[1];ctx.beginPath();ctx.moveTo(6*cell,6*cell);ctx.lineTo(9*cell,6*cell);ctx.lineTo(7.5*cell,7.5*cell);ctx.closePath();ctx.fill();
+  ctx.fillStyle=homeColors[2];ctx.beginPath();ctx.moveTo(9*cell,6*cell);ctx.lineTo(9*cell,9*cell);ctx.lineTo(7.5*cell,7.5*cell);ctx.closePath();ctx.fill();
+  ctx.fillStyle=homeColors[3];ctx.beginPath();ctx.moveTo(9*cell,9*cell);ctx.lineTo(6*cell,9*cell);ctx.lineTo(7.5*cell,7.5*cell);ctx.closePath();ctx.fill();
+  ctx.fillStyle=homeColors[0];ctx.beginPath();ctx.moveTo(6*cell,9*cell);ctx.lineTo(6*cell,6*cell);ctx.lineTo(7.5*cell,7.5*cell);ctx.closePath();ctx.fill();
+  // دوائر البيوت البيضاء
+  [[3,3,homeColors[0]],[3,12,homeColors[1]],[12,12,homeColors[2]],[12,3,homeColors[3]]].forEach(([cr,cc,col])=>{
+    ctx.fillStyle="white";ctx.beginPath();ctx.arc((cc+0.5)*cell,(cr+0.5)*cell,2.2*cell,0,Math.PI*2);ctx.fill();ctx.strokeStyle=col;ctx.lineWidth=3;ctx.stroke();
+  });
+  // القطع - دائرية 100% لانها مرسومة بـ arc
+  positions.forEach((group,p)=>{
+    group.forEach((pos,i)=>{
+      let pt=getPoint(p,pos,i);
+      let cx=(pt[1]+0.5)*cell, cy=(pt[0]+0.5)*cell;
+      let r=cell*0.36;
+      // اذا قطعتين بنفس المكان - فصل
+      let same=0;positions.forEach(g2=>g2.forEach(v2=>{let pt2=getPoint(p,v2,i);}));
+      // هالة ذهبية للقطعة اللي تتحرك
+      if(p===turn && waiting && canMove(i) && !animating){
+        ctx.beginPath();ctx.arc(cx,cy,r+7,0,Math.PI*2);ctx.fillStyle="rgba(255,215,0,.9)";ctx.fill();
+        ctx.beginPath();ctx.arc(cx,cy,r+3,0,Math.PI*2);ctx.fillStyle="#ffd700";ctx.fill();
+      }
+      // ظل
+      ctx.beginPath();ctx.arc(cx+2,cy+3,r,0,Math.PI*2);ctx.fillStyle="rgba(0,0,0,.25)";ctx.fill();
+      // الجسم
+      let grad=ctx.createRadialGradient(cx-r*0.3,cy-r*0.3,r*0.1,cx,cy,r);
+      grad.addColorStop(0,"#ffffff");grad.addColorStop(0.3,tokenColors[p]);grad.addColorStop(1,tokenColors[p]);
+      ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill();
+      ctx.lineWidth=2;ctx.strokeStyle="white";ctx.stroke();
+      // الرقم
+      ctx.fillStyle="white";ctx.font="bold "+Math.floor(r)+"px Arial";ctx.fillText(i+1,cx,cy+1);
+    });
+  });
+}
+function updateUI(){
+  $("coinsDisplay").textContent=coins;$("winsDisplay").textContent=wins;$("streakDisplay").textContent=streak;$("card0Coins").textContent=coins;
+  $("status").textContent="دور اللاعب "+names[turn];
+  for(let k=0;k<4;k++){let card=$("card"+k);if(card){card.classList.toggle("active",k===turn);let s=card.querySelector("small");if(s)s.textContent=k===turn?"دوره الان 🔥":"في الانتظار";}}
+  if($("card0Status"))$("card0Status").textContent=turn===0?"دورك! 🔥":"في الانتظار";
+}
+function showHome(){$("gamePage").classList.add("hidden");$("homePage").classList.remove("hidden");}
+function showGame(){$("homePage").classList.add("hidden");$("gamePage").classList.remove("hidden");if(!positions.length)startGame(2);}
+function startGame(n){count=n;turn=0;rollValue=0;waiting=false;finished=false;animating=false;positions=Array.from({length:count},()=>[-1,-1,-1,-1]);$("dice").textContent="🎲";$("gameMessage").textContent="ارمِ النرد للبدء";showGame();drawBoard();updateUI();}
+function rollDice(){if(waiting||finished||animating)return;$("dice").classList.add("rolling");$("rollBtn").disabled=true;setTimeout(()=>{$("dice").classList.remove("rolling");$("rollBtn").disabled=false;rollValue=Math.floor(Math.random()*6)+1;$("dice").textContent=["⚀","⚁","⚂","⚃","⚄","⚅"][rollValue-1];waiting=true;let valid=positions[turn].some((v,i)=>canMove(i));if(!valid){waiting=false;$("gameMessage").textContent="ما عندك حركة ممكنة.";if(rollValue!==6){turn=(turn+1)%count;}drawBoard();updateUI();return;}$("gameMessage").textContent="🎯 اضغط على القطعة الذهبية!";drawBoard();updateUI();},450);}
+async function movePiece(i){
+  if(!waiting||finished||animating)return;if(!canMove(i))return alert("هذه القطعة ما تتحرك بهذا الرقم - جرب غيرها");
+  animating=true;let old=positions[turn][i];let target=old===-1?0:old+rollValue;
+  if(old===-1){positions[turn][i]=0;drawBoard();await new Promise(r=>setTimeout(r,350));}
+  else{for(let s=old+1;s<=target;s++){positions[turn][i]=s;drawBoard();await new Promise(r=>setTimeout(r,280));}}
+  let ate=false;
+  if(target<52){let landing=(starts[turn]+target)%52;if(!safe.includes(landing)){positions.forEach((g,p)=>{if(p===turn)return;g.forEach((v,j)=>{if(v>=0&&v<52&&(starts[p]+v)%52===landing){g[j]=-1;ate=true;}});});}
+  if(ate){$("gameMessage").textContent="🔥 اكلت خصمك! +100 💰";coins+=100;drawBoard();await new Promise(r=>setTimeout(r,500));}
+  animating=false;
+  if(positions[turn].every(v=>v===57)){finished=true;waiting=false;wins++;streak++;let reward=200+streak*20;coins+=reward;localStorage.setItem("lama_coins",coins);localStorage.setItem("lama_wins",wins);localStorage.setItem("lama_streak",streak);drawBoard();updateUI();$("gameMessage").textContent="🏆 فاز "+names[turn]+"! +"+reward+" 💰";alert("🏆 فزت! +"+reward+" 💰");return;}
+  waiting=false;if(rollValue!==6)turn=(turn+1)%count;
+  $("gameMessage").textContent=rollValue===6?"ممتاز! رمية اضافية 🎉":"تم ✅";
+  drawBoard();updateUI();
+}
+// الضغط على Canvas - دقة 100% لانها تحسب بالبكسل
+canvas.addEventListener("click",e=>{
+  if(!waiting||animating)return;
+  let rect=canvas.getBoundingClientRect();
+  let x=(e.clientX-rect.left)/rect.width*600;
+  let y=(e.clientY-rect.top)/rect.height*600;
+  let cell=600/15;
+  // ندور اي قطعة قريبة من الضغطة
+  let best=-1,bestDist=9999;
+  positions[turn].forEach((pos,i)=>{
+    if(!canMove(i))return;
+    let pt=getPoint(turn,pos,i);
+    let cx=(pt[1]+0.5)*cell, cy=(pt[0]+0.5)*cell;
+    let d=Math.hypot(x-cx,y-cy);
+    if(d<bestDist){bestDist=d;best=i;}
+  });
+  if(best!==-1 && bestDist<cell){movePiece(best);}
+});
+startGame(2);
+</script>
+</body>
+</html>
